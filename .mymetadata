@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project-module
+  type="WEB"
+  name="babasport"
+  id="myeclipse.1511072577473"
+  context-root="/"
+  j2ee-spec="6.0"
+  archive="babasport.war">
+  <attributes>
+    <attribute name="webrootdir" value="src/main/webapp" />
+  </attributes>
+</project-module>
+

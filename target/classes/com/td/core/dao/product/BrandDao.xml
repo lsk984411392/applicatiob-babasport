@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.td.core.dao.product.BrandDao">
+	<!--返回结果 与 javaBean对象中属性 映射关系 -->
+	<resultMap id="b1" type="Brand">
+		<result property="id" column="id" />
+		<result property="name" column="name" />
+		<result property="description" column="description" />
+		<result property="imgUrl" column="img_url" />
+		<result property="webSite" column="web_site" />
+		<result property="sort" column="sort" />
+		<result property="isDisplay" column="is_display" />
+	</resultMap>
+	
+	<!-- 查询所有 或者 指定字段    -->
+	<sql id="brandSelector">
+		select
+		<if test="fields != null">
+			${fields}
+		</if>
+		<if test="fields == null">
+			id , name ,description,img_url,sort,is_display
+		</if>
+		from bbs_brand
+	</sql>
+	<!-- 品牌条件 ，是否开启模糊查询-->
+	<sql id="brandWhere">
+		<where>
+			<if test="isDisplay != null">
+				is_display = #{isDisplay}
+			</if>
+			<if test="name != null">
+				<if test="nameLike == false">
+					and name = #{name}
+				</if>
+				<if test="nameLike == true">
+					and name like "%"#{name}"%"
+				</if>
+			</if>
+		</where>
+	</sql>
+	
+	<!-- 品牌 Order by -->
+	<sql id="brandOrderBy">
+		<if test="orderFields != null and orderFields.size > 0">
+			order by
+			<foreach collection="orderFields" item="fieldOrder" separator=",">
+				${fieldOrder.field} ${fieldOrder.order}
+			</foreach>
+		</if>
+	</sql>
+	
+	<!-- limit ，是否开启分页-->
+	<sql id="brandLimit">
+		<if test="startRow != null">
+			limit #{startRow},#{pageSize}
+		</if>
+	</sql>
+	<!-- 查询品牌集合 -->
+	<select id="getBrandList" parameterType="BrandQuery" resultMap="b1">
+		<include refid="brandSelector"/>
+		<include refid="brandWhere"/>
+		<include refid="brandOrderBy"/>
+		<include refid="brandLimit"/>
+	</select>
+	
+	
+	
+<!-- 查询所有品牌的所有属性-->
+	<!-- <select id="getBrandListWithPage" parameterType="Brand" resultMap="b1">
+		select * from bbs_brand 
+		<include refid="s1"/>
+		order by id desc limit #{startRow},#{pageSize}
+	</select> -->
+	<select id="getTotal" parameterType="BrandQuery"  resultType="int">
+		select count(*) from bbs_brand
+		<include refid="brandWhere"/><!-- <include refid="s1"/> -->
+	</select>
+	<select id="add" parameterType="Brand">
+		insert into bbs_brand(id,name,description,img_url,web_site,sort,is_display)
+		values(#{id},#{name},#{description},#{imgUrl},#{webSite},#{sort},#{isDisplay})
+	</select>
+	<select id="delete" parameterType="int">
+		delete from bbs_brand 
+		<where>
+			id=#{id}
+		</where>
+	</select>
+	<select id="deleteBypiliang" parameterType="int">
+		delete from bbs_brand 
+		<where>
+			id in 
+			<foreach collection="array" item="id"  open="("  close=")" separator=",">
+				#{id}
+			</foreach>
+		</where>
+	</select>
+	
+	<select id="findBrandById" parameterType="int" resultMap="b1">
+		select * from bbs_brand 
+		<where>
+			id=#{id}
+		</where>
+	</select>
+	<select id="update" parameterType="Brand" >
+		update bbs_brand 
+		<set>
+			name=#{name},description=#{description},img_url=#{imgUrl},web_site=#{webSite},sort=#{sort},
+			is_display=#{isDisplay}
+		</set>
+		<where>
+			id=#{id}
+		</where>
+	</select>
+	<!-- <insert id="add" parameterType="Brand">
+		INSERT INTO bbs_brand
+		<trim prefix="(" suffix=")" >
+					id,
+					name,
+					description,
+					img_url,
+					web_site,
+					sort,
+					is_display
+		</trim>
+		VALUES
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+					#{id},
+					#{name},
+					#{description},
+					#{imgUrl},
+					#{webSite},
+					#{sort},
+					#{isDisplay}
+		</trim>
+	</insert>
+ -->
+	<sql id="s1">
+		<where>
+			<if test="name!=null and name!=''">
+				and name like '%${name}%'
+			</if>
+			<if test="isDisplay!=null">
+				and is_display =#{isDisplay}
+			</if>
+		</where> 
+	</sql>
+</mapper>
+
