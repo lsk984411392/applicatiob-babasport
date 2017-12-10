@@ -10,6 +10,61 @@
 <script src="/res/js/jquery.js"></script>
 <script src="/res/js/com.js"></script>
 </head>
+<script type="text/javascript">
+	function changeProvince(pcode){
+		var url="/changeCity.shtml";
+		var param={"pcode":pcode};
+		$.post(url,param,function(data){
+			var citys=data.citys;
+			var h="<option value='' >城市</option>";
+			for(i=0;i<citys.length;i++){
+				h+="<option value="+citys[i].code+" >"+citys[i].name+"</option>";
+			}
+			$("#city").html(h);
+			$("#town").html("<option value='' >县/区</option>"); 
+		},'json');
+	}
+	function changeCity(ccode){
+		var url="/changeTown.shtml";
+		var param={"ccode":ccode};
+		$.post(url,param,function(data){
+			var towns=data.towns;
+			var h="<option value='' >县/区</option>";
+			for(i=0;i<towns.length;i++){
+				h+="<option value="+towns[i].code+" >"+towns[i].name+"</option>";
+			}
+			$("#town").html(h); 
+		},'json');
+	}
+	function del(addrId){
+		if(confirm("你确定要删除此收货地址吗？")){
+			window.location.href="/buyer/deleteDeliveryAddr.shtml?addrId="+addrId;
+		
+		}
+		
+	}
+$(document).ready(function(){
+	var url="/product/viewCart.shtml";
+	$.post(url,null,function(data){
+		var items=data.items;
+		var ht="";
+		var amount=0;
+		var totalp=0.00;
+		for(i=0;i<items.length;i++){
+			ht+="<p class='dt'>"+items[i].sku.product.name+"---"+items[i].sku.color.name+"---"+items[i].sku.size+"---"
+			+"<b><var>¥"+items[i].sku.skuPrice+"</var><span>x"+items[i].amount+"</span></b></p>";
+			amount+=items[i].amount;
+			totalp+=(items[i].amount)*(items[i].sku.skuPrice);
+		}
+		$("#ul1").html(ht);
+		
+		$("#totaljian").html(amount);
+		$("#totaljian2").html(amount);
+		$("#totalPrice").html(totalp);
+	},'json');
+
+});
+</script>
 <body>
 <div class="bar"><div class="bar_w">
 	<p class="l">
@@ -18,11 +73,13 @@
 		</span>
 	</p>
 	<ul class="r uls">
-	<li class="dev">您好,欢迎来到新巴巴运动网！</li>
-	<li class="dev"><a href="javascript:void(0)" onclick="logout()" title="退出">[退出]</a></li>
-	<li class="dev"><a href="javascript:void(0)" onclick="myOrder()" title="我的订单">我的订单</a></li>
-	<li class="dev"><a href="#" title="在线客服">在线客服</a></li>
-	<li class="dev after"><a href="#" title="English">English</a></li>
+	<li class="dev">您好,欢迎 <font color="red">${buyer_session.realName }</font>来到新巴巴运动网！</li>
+			<li class="dev"><a href="javascript:void(0)" onclick="window.location.href ='/buyer/toLogout.shtml'" title="退出">[退出]</a></li>
+			<li class="dev"><a href="javascript:void(0)" onclick="window.location.href='/product/toCart.shtml'" title="退出">[购物车]</a></li>
+			<li class="dev"><a href="javascript:void(0)" onclick="window.location.href ='/buyer/index.shtml'" title="我的订单">我的订单</a></li>
+		
+		<li class="dev"><a href="#" title="在线客服">在线客服</a></li>
+		<li class="dev after"><a href="#" title="English">English</a></li>
 	</ul>
 </div></div>
 
@@ -35,60 +92,16 @@
 	    </div>
 	</div>
 	<dl id="cart" class="cart r">
-		<dt><a href="#" title="结算">结算</a>购物车:<b id="">5</b>件</dt>
+		<dt><a href="javascript:void(0)" title="结算" onclick="window.location.href ='/buyer/toOrder.shtml'"> 去结算</a  >购物车:共有  <b id="totaljian" >0</b>件</dt>
 		<dd class="hidden">
 			<p class="alg_c hidden">购物车中还没有商品，赶紧选购吧！</p>
 			<h3 title="最新加入的商品">最新加入的商品</h3>
-			<ul class="uls">
-				<li>
-					<a href="#" title="依琦莲2014瑜伽服套装新 瑜珈健身服三件套 广场舞蹈服装 女瑜伽服送胸垫 长袖紫色 M全场支持货到付款 全网最低价 千人超高好评瑜伽服赶紧抢！全五分好评截图联系客服还返现五元">
-					<img src="/res/img/pic/p50x50.jpg" alt="依琦莲2014瑜伽服套装新 瑜珈健身服三件套 广场舞蹈服装 女瑜伽服送胸垫 长袖紫色 M全场支持货到付款 全网最低价 千人超高好评瑜伽服赶紧抢！全五分好评截图联系客服还返现五元" /></a>
-					<p class="dt"><a href="#" title="依琦莲2014瑜伽服套装新 瑜珈健身服三件套 广场舞蹈服装 女瑜伽服送胸垫 长袖紫色 M全场支持货到付款 全网最低价 千人超高好评瑜伽服赶紧抢！全五分好评截图联系客服还返现五元">依琦莲2014瑜伽服套装新 瑜珈健身服三件套 广场舞蹈服装 女瑜伽服送胸垫 长袖紫色 M全场支持货到付款 全网最低价 千人超高好评瑜伽服赶紧抢！全五分好评截图联系客服还返现五元</a></p>
-					<p class="dd">
-						<b><var>¥128</var><span>x1</span></b>
-						<a href="javascript:void(0);" title="删除" class="del">删除</a>
-					</p>
-				</li>
-				<li>
-					<a href="#" title="依琦莲2014瑜伽服套装新 瑜珈健身服三件套 广场舞蹈服装 女瑜伽服送胸垫 长袖紫色 M全场支持货到付款 全网最低价 千人超高好评瑜伽服赶紧抢！全五分好评截图联系客服还返现五元">
-					<img src="/res/img/pic/p50x50.jpg" alt="依琦莲2014瑜伽服套装新 瑜珈健身服三件套 广场舞蹈服装 女瑜伽服送胸垫 长袖紫色 M全场支持货到付款 全网最低价 千人超高好评瑜伽服赶紧抢！全五分好评截图联系客服还返现五元" /></a>
-					<p class="dt"><a href="#" title="依琦莲2014瑜伽服套装新 瑜珈健身服三件套 广场舞蹈服装 女瑜伽服送胸垫 长袖紫色 M全场支持货到付款 全网最低价 千人超高好评瑜伽服赶紧抢！全五分好评截图联系客服还返现五元">依琦莲2014瑜伽服套装新 瑜珈健身服三件套 广场舞蹈服装 女瑜伽服送胸垫 长袖紫色 M全场支持货到付款 全网最低价 千人超高好评瑜伽服赶紧抢！全五分好评截图联系客服还返现五元</a></p>
-					<p class="dd">
-						<b><var>¥128</var><span>x1</span></b>
-						<a href="javascript:void(0);" title="删除" class="del">删除</a>
-					</p>
-				</li>
-				<li>
-					<a href="#" title="依琦莲2014瑜伽服套装新 瑜珈健身服三件套 广场舞蹈服装 女瑜伽服送胸垫 长袖紫色 M全场支持货到付款 全网最低价 千人超高好评瑜伽服赶紧抢！全五分好评截图联系客服还返现五元">
-					<img src="/res/img/pic/p50x50.jpg" alt="依琦莲2014瑜伽服套装新 瑜珈健身服三件套 广场舞蹈服装 女瑜伽服送胸垫 长袖紫色 M全场支持货到付款 全网最低价 千人超高好评瑜伽服赶紧抢！全五分好评截图联系客服还返现五元" /></a>
-					<p class="dt"><a href="#" title="依琦莲2014瑜伽服套装新 瑜珈健身服三件套 广场舞蹈服装 女瑜伽服送胸垫 长袖紫色 M全场支持货到付款 全网最低价 千人超高好评瑜伽服赶紧抢！全五分好评截图联系客服还返现五元">依琦莲2014瑜伽服套装新 瑜珈健身服三件套 广场舞蹈服装 女瑜伽服送胸垫 长袖紫色 M全场支持货到付款 全网最低价 千人超高好评瑜伽服赶紧抢！全五分好评截图联系客服还返现五元</a></p>
-					<p class="dd">
-						<b><var>¥128</var><span>x1</span></b>
-						<a href="javascript:void(0);" title="删除" class="del">删除</a>
-					</p>
-				</li>
-				<li>
-					<a href="#" title="依琦莲2014瑜伽服套装新 瑜珈健身服三件套 广场舞蹈服装 女瑜伽服送胸垫 长袖紫色 M全场支持货到付款 全网最低价 千人超高好评瑜伽服赶紧抢！全五分好评截图联系客服还返现五元">
-					<img src="/res/img/pic/p50x50.jpg" alt="依琦莲2014瑜伽服套装新 瑜珈健身服三件套 广场舞蹈服装 女瑜伽服送胸垫 长袖紫色 M全场支持货到付款 全网最低价 千人超高好评瑜伽服赶紧抢！全五分好评截图联系客服还返现五元" /></a>
-					<p class="dt"><a href="#" title="依琦莲2014瑜伽服套装新 瑜珈健身服三件套 广场舞蹈服装 女瑜伽服送胸垫 长袖紫色 M全场支持货到付款 全网最低价 千人超高好评瑜伽服赶紧抢！全五分好评截图联系客服还返现五元">依琦莲2014瑜伽服套装新 瑜珈健身服三件套 广场舞蹈服装 女瑜伽服送胸垫 长袖紫色 M全场支持货到付款 全网最低价 千人超高好评瑜伽服赶紧抢！全五分好评截图联系客服还返现五元</a></p>
-					<p class="dd">
-						<b><var>¥128</var><span>x1</span></b>
-						<a href="javascript:void(0);" title="删除" class="del">删除</a>
-					</p>
-				</li>
-				<li>
-					<a href="#" title="依琦莲2014瑜伽服套装新 瑜珈健身服三件套 广场舞蹈服装 女瑜伽服送胸垫 长袖紫色 M全场支持货到付款 全网最低价 千人超高好评瑜伽服赶紧抢！全五分好评截图联系客服还返现五元">
-					<img src="/res/img/pic/p50x50.jpg" alt="依琦莲2014瑜伽服套装新 瑜珈健身服三件套 广场舞蹈服装 女瑜伽服送胸垫 长袖紫色 M全场支持货到付款 全网最低价 千人超高好评瑜伽服赶紧抢！全五分好评截图联系客服还返现五元" /></a>
-					<p class="dt"><a href="#" title="依琦莲2014瑜伽服套装新 瑜珈健身服三件套 广场舞蹈服装 女瑜伽服送胸垫 长袖紫色 M全场支持货到付款 全网最低价 千人超高好评瑜伽服赶紧抢！全五分好评截图联系客服还返现五元">依琦莲2014瑜伽服套装新 瑜珈健身服三件套 广场舞蹈服装 女瑜伽服送胸垫 长袖紫色 M全场支持货到付款 全网最低价 千人超高好评瑜伽服赶紧抢！全五分好评截图联系客服还返现五元</a></p>
-					<p class="dd">
-						<b><var>¥128</var><span>x1</span></b>
-						<a href="javascript:void(0);" title="删除" class="del">删除</a>
-					</p>
-				</li>
+			<ul class="uls" id="ul1">
+				
 			</ul>
 			<div>
-				<p>共<b>5</b>件商品&nbsp;&nbsp;&nbsp;&nbsp;共计<b class="f20">¥640.00</b></p>
-				<a href="#" title="去购物车结算" class="inb btn120x30c">去购物车结算</a>
+				<p>共<b id="totaljian2">0</b>件商品&nbsp;&nbsp;&nbsp;&nbsp;共计<b class="f20" id="totalPrice">¥0.00</b></p>
+				<a href="javascript:void(0)" title="去购物车结算" class="inb btn120x30c" onclick="window.location.href ='/buyer/toOrder.shtml'">去购物车结算</a>
 			</div>
 		</dd>
 	</dl>
@@ -100,18 +113,18 @@
 		<h2 class="h2 h2_l"><em title="交易管理">交易管理</em><cite>&nbsp;</cite></h2>
 		<div class="box bg_gray">
 			<ul class="ul left_nav">
-			<li><a href="../buyer/orders.jsp" title="我的订单">我的订单</a></li>
-			<li><a href="../buyer/orders.jsp" title="退换货订单">退换货订单</a></li>
-			<li><a href="../buyer/orders.jsp" title="我的收藏">我的收藏</a></li>
+			<li><a href="/buyer/index.shtml" title="我的订单">我的订单</a></li>
+			<!-- <li><a href="../buyer/orders.jsp" title="退换货订单">退换货订单</a></li> -->
+			<!-- <li><a href="../buyer/orders.jsp" title="我的收藏">我的收藏</a></li> -->
 			</ul>
 		</div>
 
 		<h2 class="h2 h2_l mt"><em title="账户管理">账户管理</em><cite>&nbsp;</cite></h2>
 		<div class="box bg_gray">
 			<ul class="ul left_nav">
-			<li><a href="../buyer/profile.jsp" title="个人资料">个人资料</a></li>
-			<li><a href="../buyer/deliver_address.jsp" title="收货地址">收货地址</a></li>
-			<li><a href="../buyer/change_password.jsp" title="修改密码">修改密码</a></li>
+			<li><a href="/buyer/profile.shtml" title="个人资料">个人资料</a></li>
+			<li><a href="/buyer/toDeliverAddress.shtml" title="收货地址">收货地址</a></li>
+			<li><a href="/buyer/toChangePassword.shtml" title="修改密码">修改密码</a></li>
 			</ul>
 		</div>
 	</div>
@@ -132,64 +145,92 @@
 				<th>所在地区</th>
 				<th>街道地址</th>
 				<th>电话/手机</th>
+				<th>状态</th>
 				<th>操作</th>
 				</tr>                                                          
 				</thead>
 				<tbody>
-					<tr class="here">
-						<td>范冰冰</td>
-						<td>北京 北京市 海淀区</td>
-						<td>XXX大道XXX号XX室</td>
-						<td>15321801196</td>
-						<td><a href="javascript:void(0);" title="修改" onclick="modify('1')" class="blue">[修改]</a><a href="javascript:void(0);" title="删除" onclick="del(this)" class="blue">[删除]</a></td>
-					</tr>
-					<tr>
-						<td>李冰冰</td>
-						<td>北京 北京市 海淀区</td>
-						<td>XXX大道XXX号XX室</td>
-						<td>15321801196</td>
-						<td><a href="javascript:void(0);" title="修改" onclick="modify('1')" class="blue">[修改]</a><a href="javascript:void(0);" title="删除" onclick="del(this)" class="blue">[删除]</a></td>
-					</tr>
+					<c:forEach items="${addrs }" var="addr">
+						<tr class="here">
+							<td>${addr.name }</td>
+							<td>${addr.city }</td>
+							<td>${addr.addr }</td>
+							<td>${addr.phone}</td>
+							<td><c:if test="${addr.isDef==1 }">默认地址</c:if>
+								<c:if test="${addr.isDef!=1 }"><a class="blue" href="/buyer/setDefaultDelivery.shtml?addrId=${addr.id }" title="设为默认地址">设为默认地址</a>  </c:if>
+							
+							</td>
+							<td><!-- <a href="javascript:void(0);" title="修改" onclick="modify('1')" class="blue">[修改]</a> -->
+							<a href="javascript:void(0);" title="删除" onclick="del(${addr.id})" class="blue">[删除]</a></td>
+						</tr>
+					</c:forEach>
 				</tbody>
 				</table>
 
 				<h3 class="h3_r">新增/修改收货地址<span>手机、固定电话选填一项，其余均为必填</span></h3>
 
-				<form id="jvForm" method="post">
+				<form id="jvForm" method="post" action="/buyer/addDeliverAddress.shtml">
 					<ul class="uls form">
 					<li id="errorName" class="errorTip" style="display:none">${error}</li>
 					<li>
 						<label for="username"><samp>*</samp>收货人姓名：</label>
-						<span class="bg_text"><input type="text" id="username" name="username" vld="{required:true}" maxLength="100" /></span>
+						<span class="bg_text"><input type="text" id="username" name="name" vld="{required:true}" maxLength="100" /></span>
 						<span class="pos"><span class="tip okTip">&nbsp;</span></span>
 					</li>
 					<li>
 						<label for="residence"><samp>*</samp>地　　址：</label>
 						<span class="word">
-						<select name="">
-							<option value="" selected>省/直辖市</option>
-							<option value=""></option>
-						</select><select name="">
-							<option value="" selected>城市</option>
-							<option value=""></option>
-						</select><select name="">
-							<option value="" selected>县/区</option>
-							<option value=""></option>
-						</select></span>
+							<!-- <select name="">
+								<option value="" selected>省/直辖市</option>
+								<option value=""></option>
+							</select>
+							<select name="">
+								<option value="" selected>城市</option>
+								<option value=""></option>
+							</select>
+							
+							<select name="">
+								<option value="" selected>县/区</option>
+								<option value=""></option>
+							</select> -->
+							<select name="provinceCode"  id="province" onchange="changeProvince(this.value)" >
+								<option value="" selected>省/直辖市</option>
+								<c:forEach items="${ provinces}" var="p">
+									<option value="${p.code }" >${p.name }</option>
+								</c:forEach>
+								
+							</select>
+							<select name="cityCode" id="city" onchange="changeCity(this.value)">
+								<option value="" >城市</option>
+								<c:forEach items="${citys }" var="c">
+									<option value="${c.code }" <c:if test="${buyer.city==c.code }" >selected="selected"</c:if>>${c.name }</option>
+								</c:forEach>
+								
+							</select>
+							<select name="townCode" id="town">
+								<option value="" selected>县/区</option>
+								<c:forEach items="${towns }" var="t">
+									<option value="${t.code }" <c:if test="${buyer.town==t.code }" >selected="selected"</c:if>>${t.name }</option>
+								</c:forEach>
+								
+								
+							</select>
+							
+						</span>
 					</li>
 					<li>
 						<label for="nick"><samp>*</samp>街道地址：</label>
-						<span class="bg_text"><input type="text" id="nick" name="nick" maxLength="32"/></span>
-						<span class="pos"><span class="tip errorTip">用户名为4-20位字母、数字或中文组成，字母区分大小写。</span></span>
+						<span class="bg_text"><input type="text" id="nick" name="addr" maxLength="32"/></span>
+						<!-- <span class="pos"><span class="tip errorTip">用户名为4-20位字母、数字或中文组成，字母区分大小写。</span></span> -->
 					</li>
 					<li>
 						<label for="telphone"><samp>*</samp>联系电话：</label>
-						<span class="bg_text"><input type="text" id="telphone" name="telphone" maxLength="32"/></span>
-						<span class="pos"><span class="tip warningTip">用户名为4-20位字母、数字或中文组成，字母区分大小写。</span></span>
+						<span class="bg_text"><input type="text" id="telphone" name="phone" maxLength="32"/></span>
+						<!-- <span class="pos"><span class="tip warningTip">用户名为4-20位字母、数字或中文组成，字母区分大小写。</span></span> -->
 					</li>
 					<li>
 						<label for="statusAddr">&nbsp;</label>
-						<span><input type="checkbox" name="statusAddr" />设为默认收货地址</span>
+						<span><input type="checkbox" name="isDef" value="1"/>设为默认收货地址</span>
 					</li>
 					<li><label for="">&nbsp;</label><input type="submit" value="保存" class="hand btn66x23" /></li>
 					</ul>

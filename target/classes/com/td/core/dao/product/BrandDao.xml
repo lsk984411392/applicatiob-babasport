@@ -66,6 +66,12 @@
 		<include refid="brandLimit"/>
 	</select>
 	
+	<select id="getBrandById" parameterType="int" resultMap="b1">
+		select * from bbs_brand 
+		<where>
+			id=#{id}
+		</where>
+	</select>
 	
 	
 <!-- 查询所有品牌的所有属性-->
@@ -82,7 +88,7 @@
 		insert into bbs_brand(id,name,description,img_url,web_site,sort,is_display)
 		values(#{id},#{name},#{description},#{imgUrl},#{webSite},#{sort},#{isDisplay})
 	</select>
-	<select id="delete" parameterType="int">
+	<select id="delete" parameterType="int" resultType="int">
 		delete from bbs_brand 
 		<where>
 			id=#{id}

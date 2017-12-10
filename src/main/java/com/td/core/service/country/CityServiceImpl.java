@@ -79,4 +79,10 @@ public class CityServiceImpl implements CityService {
 	public List<City> getCityList(CityQuery cityQuery) {
 		return cityDao.getCityList(cityQuery);
 	}
+
+	@Override
+	public City getCityByCode(String code) {
+		// TODO Auto-generated method stub
+		return cityDao.getCityByCode(code);
+	}
 }

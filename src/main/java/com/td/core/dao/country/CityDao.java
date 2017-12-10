@@ -18,6 +18,7 @@ public interface CityDao {
 	 * @param cityQuery
 	 */
 	public City getCityByKey(Integer id);
+	public City getCityByCode(String code);
 
 	/**
 	 * 根据主键批量查找

@@ -10,6 +10,54 @@
 <script src="/res/js/jquery.js"></script>
 <script src="/res/js/com.js"></script>
 </head>
+<script type="text/javascript">
+	function changeProvince(pcode){
+		var url="/changeCity.shtml";
+		var param={"pcode":pcode};
+		$.post(url,param,function(data){
+			var citys=data.citys;
+			var h="<option value='' >城市</option>";
+			for(i=0;i<citys.length;i++){
+				h+="<option value="+citys[i].code+" >"+citys[i].name+"</option>";
+			}
+			$("#city").html(h);
+			$("#town").html("<option value='' >县/区</option>"); 
+		},'json');
+	}
+	function changeCity(ccode){
+		var url="/changeTown.shtml";
+		var param={"ccode":ccode};
+		$.post(url,param,function(data){
+			var towns=data.towns;
+			var h="<option value='' >县/区</option>";
+			for(i=0;i<towns.length;i++){
+				h+="<option value="+towns[i].code+" >"+towns[i].name+"</option>";
+			}
+			$("#town").html(h); 
+		},'json');
+	}
+$(document).ready(function(){
+	var url="/product/viewCart.shtml";
+	$.post(url,null,function(data){
+		var items=data.items;
+		var ht="";
+		var amount=0;
+		var totalp=0.00;
+		for(i=0;i<items.length;i++){
+			ht+="<p class='dt'>"+items[i].sku.product.name+"---"+items[i].sku.color.name+"---"+items[i].sku.size+"---"
+			+"<b><var>¥"+items[i].sku.skuPrice+"</var><span>x"+items[i].amount+"</span></b></p>";
+			amount+=items[i].amount;
+			totalp+=(items[i].amount)*(items[i].sku.skuPrice);
+		}
+		$("#ul1").html(ht);
+		
+		$("#totaljian").html(amount);
+		$("#totaljian2").html(amount);
+		$("#totalPrice").html(totalp);
+	},'json');
+
+});
+</script>
 <body>
 <div class="bar"><div class="bar_w">
 	<p class="l">
@@ -18,11 +66,13 @@
 		</span>
 	</p>
 	<ul class="r uls">
-	<li class="dev">您好,欢迎来到新巴巴运动网！</li>
-	<li class="dev"><a href="javascript:void(0)" onclick="logout()" title="退出">[退出]</a></li>
-	<li class="dev"><a href="javascript:void(0)" onclick="myOrder()" title="我的订单">我的订单</a></li>
-	<li class="dev"><a href="#" title="在线客服">在线客服</a></li>
-	<li class="dev after"><a href="#" title="English">English</a></li>
+	<<li class="dev">您好,欢迎 <font color="red">${buyer_session.realName }</font>来到新巴巴运动网！</li>
+			<li class="dev"><a href="javascript:void(0)" onclick="window.location.href ='/buyer/toLogout.shtml'" title="退出">[退出]</a></li>
+			<li class="dev"><a href="javascript:void(0)" onclick="window.location.href='/product/toCart.shtml'" title="退出">[购物车]</a></li>
+			<li class="dev"><a href="javascript:void(0)" onclick="window.location.href ='/buyer/index.shtml'" title="我的订单">我的订单</a></li>
+		
+		<li class="dev"><a href="#" title="在线客服">在线客服</a></li>
+		<li class="dev after"><a href="#" title="English">English</a></li>
 	</ul>
 </div></div>
 <div class="w loc">
@@ -34,60 +84,16 @@
 	    </div>
 	</div>
 	<dl id="cart" class="cart r">
-		<dt><a href="#" title="结算">结算</a>购物车:<b id="">5</b>件</dt>
+		<dt><a href="javascript:void(0)" title="结算" onclick="window.location.href ='/buyer/toOrder.shtml'"> 去结算</a  >购物车:共有  <b id="totaljian" >0</b>件</dt>
 		<dd class="hidden">
 			<p class="alg_c hidden">购物车中还没有商品，赶紧选购吧！</p>
 			<h3 title="最新加入的商品">最新加入的商品</h3>
-			<ul class="uls">
-				<li>
-					<a href="#" title="依琦莲2014瑜伽服套装新 瑜珈健身服三件套 广场舞蹈服装 女瑜伽服送胸垫 长袖紫色 M全场支持货到付款 全网最低价 千人超高好评瑜伽服赶紧抢！全五分好评截图联系客服还返现五元">
-					<img src="/res/img/pic/p50x50.jpg" alt="依琦莲2014瑜伽服套装新 瑜珈健身服三件套 广场舞蹈服装 女瑜伽服送胸垫 长袖紫色 M全场支持货到付款 全网最低价 千人超高好评瑜伽服赶紧抢！全五分好评截图联系客服还返现五元" /></a>
-					<p class="dt"><a href="#" title="依琦莲2014瑜伽服套装新 瑜珈健身服三件套 广场舞蹈服装 女瑜伽服送胸垫 长袖紫色 M全场支持货到付款 全网最低价 千人超高好评瑜伽服赶紧抢！全五分好评截图联系客服还返现五元">依琦莲2014瑜伽服套装新 瑜珈健身服三件套 广场舞蹈服装 女瑜伽服送胸垫 长袖紫色 M全场支持货到付款 全网最低价 千人超高好评瑜伽服赶紧抢！全五分好评截图联系客服还返现五元</a></p>
-					<p class="dd">
-						<b><var>¥128</var><span>x1</span></b>
-						<a href="javascript:void(0);" title="删除" class="del">删除</a>
-					</p>
-				</li>
-				<li>
-					<a href="#" title="依琦莲2014瑜伽服套装新 瑜珈健身服三件套 广场舞蹈服装 女瑜伽服送胸垫 长袖紫色 M全场支持货到付款 全网最低价 千人超高好评瑜伽服赶紧抢！全五分好评截图联系客服还返现五元">
-					<img src="/res/img/pic/p50x50.jpg" alt="依琦莲2014瑜伽服套装新 瑜珈健身服三件套 广场舞蹈服装 女瑜伽服送胸垫 长袖紫色 M全场支持货到付款 全网最低价 千人超高好评瑜伽服赶紧抢！全五分好评截图联系客服还返现五元" /></a>
-					<p class="dt"><a href="#" title="依琦莲2014瑜伽服套装新 瑜珈健身服三件套 广场舞蹈服装 女瑜伽服送胸垫 长袖紫色 M全场支持货到付款 全网最低价 千人超高好评瑜伽服赶紧抢！全五分好评截图联系客服还返现五元">依琦莲2014瑜伽服套装新 瑜珈健身服三件套 广场舞蹈服装 女瑜伽服送胸垫 长袖紫色 M全场支持货到付款 全网最低价 千人超高好评瑜伽服赶紧抢！全五分好评截图联系客服还返现五元</a></p>
-					<p class="dd">
-						<b><var>¥128</var><span>x1</span></b>
-						<a href="javascript:void(0);" title="删除" class="del">删除</a>
-					</p>
-				</li>
-				<li>
-					<a href="#" title="依琦莲2014瑜伽服套装新 瑜珈健身服三件套 广场舞蹈服装 女瑜伽服送胸垫 长袖紫色 M全场支持货到付款 全网最低价 千人超高好评瑜伽服赶紧抢！全五分好评截图联系客服还返现五元">
-					<img src="/res/img/pic/p50x50.jpg" alt="依琦莲2014瑜伽服套装新 瑜珈健身服三件套 广场舞蹈服装 女瑜伽服送胸垫 长袖紫色 M全场支持货到付款 全网最低价 千人超高好评瑜伽服赶紧抢！全五分好评截图联系客服还返现五元" /></a>
-					<p class="dt"><a href="#" title="依琦莲2014瑜伽服套装新 瑜珈健身服三件套 广场舞蹈服装 女瑜伽服送胸垫 长袖紫色 M全场支持货到付款 全网最低价 千人超高好评瑜伽服赶紧抢！全五分好评截图联系客服还返现五元">依琦莲2014瑜伽服套装新 瑜珈健身服三件套 广场舞蹈服装 女瑜伽服送胸垫 长袖紫色 M全场支持货到付款 全网最低价 千人超高好评瑜伽服赶紧抢！全五分好评截图联系客服还返现五元</a></p>
-					<p class="dd">
-						<b><var>¥128</var><span>x1</span></b>
-						<a href="javascript:void(0);" title="删除" class="del">删除</a>
-					</p>
-				</li>
-				<li>
-					<a href="#" title="依琦莲2014瑜伽服套装新 瑜珈健身服三件套 广场舞蹈服装 女瑜伽服送胸垫 长袖紫色 M全场支持货到付款 全网最低价 千人超高好评瑜伽服赶紧抢！全五分好评截图联系客服还返现五元">
-					<img src="/res/img/pic/p50x50.jpg" alt="依琦莲2014瑜伽服套装新 瑜珈健身服三件套 广场舞蹈服装 女瑜伽服送胸垫 长袖紫色 M全场支持货到付款 全网最低价 千人超高好评瑜伽服赶紧抢！全五分好评截图联系客服还返现五元" /></a>
-					<p class="dt"><a href="#" title="依琦莲2014瑜伽服套装新 瑜珈健身服三件套 广场舞蹈服装 女瑜伽服送胸垫 长袖紫色 M全场支持货到付款 全网最低价 千人超高好评瑜伽服赶紧抢！全五分好评截图联系客服还返现五元">依琦莲2014瑜伽服套装新 瑜珈健身服三件套 广场舞蹈服装 女瑜伽服送胸垫 长袖紫色 M全场支持货到付款 全网最低价 千人超高好评瑜伽服赶紧抢！全五分好评截图联系客服还返现五元</a></p>
-					<p class="dd">
-						<b><var>¥128</var><span>x1</span></b>
-						<a href="javascript:void(0);" title="删除" class="del">删除</a>
-					</p>
-				</li>
-				<li>
-					<a href="#" title="依琦莲2014瑜伽服套装新 瑜珈健身服三件套 广场舞蹈服装 女瑜伽服送胸垫 长袖紫色 M全场支持货到付款 全网最低价 千人超高好评瑜伽服赶紧抢！全五分好评截图联系客服还返现五元">
-					<img src="/res/img/pic/p50x50.jpg" alt="依琦莲2014瑜伽服套装新 瑜珈健身服三件套 广场舞蹈服装 女瑜伽服送胸垫 长袖紫色 M全场支持货到付款 全网最低价 千人超高好评瑜伽服赶紧抢！全五分好评截图联系客服还返现五元" /></a>
-					<p class="dt"><a href="#" title="依琦莲2014瑜伽服套装新 瑜珈健身服三件套 广场舞蹈服装 女瑜伽服送胸垫 长袖紫色 M全场支持货到付款 全网最低价 千人超高好评瑜伽服赶紧抢！全五分好评截图联系客服还返现五元">依琦莲2014瑜伽服套装新 瑜珈健身服三件套 广场舞蹈服装 女瑜伽服送胸垫 长袖紫色 M全场支持货到付款 全网最低价 千人超高好评瑜伽服赶紧抢！全五分好评截图联系客服还返现五元</a></p>
-					<p class="dd">
-						<b><var>¥128</var><span>x1</span></b>
-						<a href="javascript:void(0);" title="删除" class="del">删除</a>
-					</p>
-				</li>
+			<ul class="uls" id="ul1">
+				
 			</ul>
 			<div>
-				<p>共<b>5</b>件商品&nbsp;&nbsp;&nbsp;&nbsp;共计<b class="f20">¥640.00</b></p>
-				<a href="#" title="去购物车结算" class="inb btn120x30c">去购物车结算</a>
+				<p>共<b id="totaljian2">0</b>件商品&nbsp;&nbsp;&nbsp;&nbsp;共计<b class="f20" id="totalPrice">¥0.00</b></p>
+				<a href="javascript:void(0)" title="去购物车结算" class="inb btn120x30c" onclick="window.location.href ='/buyer/toOrder.shtml'">去购物车结算</a>
 			</div>
 		</dd>
 	</dl>
@@ -98,17 +104,18 @@
 		<h2 class="h2 h2_l"><em title="交易管理">交易管理</em><cite>&nbsp;</cite></h2>
 		<div class="box bg_gray">
 			<ul class="ul left_nav">
-			<li><a href="../buyer/orders.jsp" title="我的订单">我的订单</a></li>
-			<li><a href="../buyer/orders.jsp" title="退换货订单">退换货订单</a></li>
-			<li><a href="../buyer/orders.jsp" title="我的收藏">我的收藏</a></li>
+			<li><a href="/buyer/index.shtml" title="我的订单">我的订单</a></li>
+			<!-- <li><a href="../buyer/orders.jsp" title="退换货订单">退换货订单</a></li> -->
+			<!-- <li><a href="../buyer/orders.jsp" title="我的收藏">我的收藏</a></li> -->
 			</ul>
 		</div>
+
 		<h2 class="h2 h2_l mt"><em title="账户管理">账户管理</em><cite>&nbsp;</cite></h2>
 		<div class="box bg_gray">
 			<ul class="ul left_nav">
-			<li><a href="../buyer/profile.jsp" title="个人资料">个人资料</a></li>
-			<li><a href="../buyer/deliver_address.jsp" title="收货地址">收货地址</a></li>
-			<li><a href="../buyer/change_password.jsp" title="修改密码">修改密码</a></li>
+			<li><a href="/buyer/profile.shtml" title="个人资料">个人资料</a></li>
+			<li><a href="/buyer/toDeliverAddress.shtml" title="收货地址">收货地址</a></li>
+			<li><a href="/buyer/toChangePassword.shtml" title="修改密码">修改密码</a></li>
 			</ul>
 		</div>
 	</div>
@@ -118,50 +125,66 @@
 			<div class="tl"></div><div class="tr"></div>
 			<div class="ofc">
 				<h2 class="h2 h2_r2"><em title="个人资料">个人资料</em></h2>
-				<form id="jvForm" action="profile.do" method="post">
+				
+				
+				<form id="jvForm" action="/buyer/updateProfile.shtml" method="post">
 					<input type="hidden" name="returnUrl" value="${returnUrl}"/>
 					<input type="hidden" name="processUrl" value="${processUrl}"/>
+					
 					<ul class="uls form">
 					<li id="errorName" class="errorTip" style="display:none">${error}</li>
 					<li>
+						<input type="hidden" name="username" value="${buyer.username }">
 						<label for="username">用 户 名：</label>
-						<span class="word">fbb2016</span>
+						<span class="word">${buyer.username }</span>
 					</li>
 					<li>
 						<label for="username">邮　　箱：</label>
-						<span class="word">fbb2014@qq.com</span>
+						<span class="word">${buyer.email }</span>
 					</li>
 					<li>
 						<label for="realName">真实姓名：</label>
-						<span class="bg_text"><input type="text" id="realName" name="realName" maxLength="32" value="范冰冰"/></span>
+						<span class="bg_text"><input type="text" id="realName" name="realName" maxLength="32" value="${buyer.realName }"/></span>
 						<span class="pos"><span class="tip okTip">&nbsp;</span></span>
 					</li>
 					<li>
 						<label for="gender">性　　别：</label>
-						<span class="word"><input type="radio" name="gender" checked="checked"/>保密<input type="radio" name="gender" />男<input type="radio" name="gender" />女</span>
+						<span class="word"><input type="radio" name="gender" <c:if test="${buyer.gender=='SECRECY' }">checked="checked"</c:if>/>保密
+						<input type="radio" name="gender" <c:if test="${buyer.gender=='MAN' }">checked="checked"</c:if>/>男
+						<input type="radio" name="gender" <c:if test="${buyer.gender=='WOMAN' }">checked="checked"</c:if>/>女</span>
 					</li>
 					<li>
 						<label for="residence">居 住 地：</label>
 						<span class="word">
-							<select name="province"  id="province" onchange="changeProvince(this.value)">
+							<select name="province"  id="province" onchange="changeProvince(this.value)" >
 								<option value="" selected>省/直辖市</option>
-								<option value=""></option>
+								<c:forEach items="${ provinces}" var="p">
+									<option value="${p.code }" <c:if test="${buyer.province==p.code }" >selected="selected"</c:if>>${p.name }</option><c:if test="${buyer.province==p.code }" >selected="selected"</c:if>
+								</c:forEach>
+								
 							</select>
-							<select name="" id="city">
-								<option value="" selected>城市</option>
-								<option value=""></option>
+							<select name="city" id="city" onchange="changeCity(this.value)">
+								<option value="" >城市</option>
+								<c:forEach items="${citys }" var="c">
+									<option value="${c.code }" <c:if test="${buyer.city==c.code }" >selected="selected"</c:if>>${c.name }</option>
+								</c:forEach>
+								
 							</select>
-							<select name="">
+							<select name="town" id="town">
 								<option value="" selected>县/区</option>
-								<option value=""></option>
+								<c:forEach items="${towns }" var="t">
+									<option value="${t.code }" <c:if test="${buyer.town==t.code }" >selected="selected"</c:if>>${t.name }</option>
+								</c:forEach>
+								
+								
 							</select>
 						</span>
 					</li>
 					<li><label for="address">详细地址：</label>
-						<span class="bg_text"><input type="text" id="address" name="address" maxLength="32" value="北京海滨区XXXXXXX"/></span>
-						<span class="pos"><span class="tip errorTip">用户名为4-20位字母、数字或中文组成，字母区分大小写。</span></span>
+						<span class="bg_text"><input type="text" id="address" name="addr" maxLength="32" value="${buyer.addr }"/></span>
+						<!-- <span class="pos"><span class="tip errorTip">用户名为4-20位字母、数字或中文组成，字母区分大小写。</span></span> -->
 					</li>
-					<li><label for="">&nbsp;</label><input type="submit" value="保存" class="hand btn66x23" /></li>
+					<li><label for="">&nbsp;</label><input type="submit" value="保存" class="hand btn66x23"  /></li>
 					</ul>
 				</form>
 			</div>

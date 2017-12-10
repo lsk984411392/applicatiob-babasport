@@ -24,6 +24,7 @@ public interface ProvinceService {
 	 * 根据主键查询
 	 */
 	public Province getProvinceByKey(Integer id);
+	public Province getProvinceByCode(String code);
 
 	/**
 	 * 根据主键批量查询

@@ -1,7 +1,7 @@
 package com.td.core.bean.product;
 
-import java.util.*;
 import java.io.Serializable;
+import java.util.Date;
 
 
 /**
@@ -20,14 +20,14 @@ public class Sku implements Serializable {
 	private Integer colorId;
 	private String size;
 	private Double deliveFee;
-	private Double skuPrice;
-	private Integer stockInventory;
-	private Integer skuUpperLimit;
+	private Double skuPrice;//售价
+	private Integer stockInventory;//库存
+	private Integer skuUpperLimit;//购买上限
 	private String location;
 	private String skuImg;
-	private Integer skuSort;
+	private Integer skuSort;//排序
 	private String skuName;
-	private Double marketPrice;
+	private Double marketPrice;//市场价
 	private Date createTime;
 	private Date updateTime;
 	private String createUserId;
@@ -35,7 +35,25 @@ public class Sku implements Serializable {
 	private Integer lastStatus;
 	private Integer skuType;
 	private Integer sales;
+	
+	
+	private Color color;
+	private Product product;
+	
 
+	
+	public Product getProduct() {
+		return product;
+	}
+	public void setProduct(Product product) {
+		this.product = product;
+	}
+	public Color getColor() {
+		return color;
+	}
+	public void setColor(Color color) {
+		this.color = color;
+	}
 	public Integer getId() {
 		return id;
 	}

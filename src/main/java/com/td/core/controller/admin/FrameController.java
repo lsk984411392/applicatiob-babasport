@@ -22,8 +22,5 @@ public class FrameController {
 	public String fpl2(){
 		return "frame/order_left";
 	}
-	@RequestMapping("frame/order_list.do")
-	public String fpl223(){
-		return "order/list";
-	}
+	
 }

@@ -13,7 +13,7 @@
 		}) */
 		$("input[name="+name+"]").attr("checked",checked);
 	}
-	function optDelete(name,isDisplay){
+	function optDelete(name,isDisplay,pageNo){
 		var s=$("input[name='ids']:checked").size();
 		if(s<=0){
 			alert("请至少选择一个进行删除");
@@ -22,9 +22,17 @@
 		if(!confirm("您确定要删除吗？")){
 			return; 
 		}
-		$("#form2").attr("action","/brand/deletes.do?name="+name+"&isDisplay="+isDisplay).submit();
+		$("#form2").attr("action","/brand/deletes.do?name="+name+"&isDisplay="+isDisplay+"&pageNo="+pageNo).submit();
 	
 	}
+$(document).ready(function(){
+	var a='${message}';
+	if(a!=null&&a!=""){
+	alert(a);
+	
+	}
+
+});
 
 </script>
 <body>
@@ -47,6 +55,8 @@
 	<input type="submit" class="query" value="查询"/>
 </form>
 <form  id="form2" method="post" >
+
+
 <table cellspacing="1" cellpadding="0" border="0" width="100%" class="pn-ltable">
 	<thead class="pn-lthead">
 		<tr>
@@ -71,7 +81,8 @@
 				<td align="center">${entry.sort }</td>
 				<td align="center"><c:if test="${entry.isDisplay == 1 }">是</c:if><c:if test="${entry.isDisplay == 0 }">不是</c:if></td>
 				<td align="center">
-				<a class="pn-opt" href="/brand/editUI.do?id=${entry.id }">修改</a> | <a class="pn-opt"  href="/brand/delete.do?id=${entry.id }&name=${name }&isDisplay=${isDisplay }" onclick="return confirm('您确定要删除吗?');">删除</a>
+				<a class="pn-opt" href="/brand/editUI.do?id=${entry.id }">修改</a> | 
+				<a class="pn-opt"  href="/brand/delete.do?id=${entry.id }&name=${name }&isDisplay=${isDisplay }&pageNo=${pagination.pageNo}" onclick="return confirm('您确定要删除吗?');">删除</a>
 				</td>
 			</tr>
 		</c:forEach>
@@ -86,7 +97,7 @@
 		</c:forEach>
 	</span>
 </div>
-<div style="margin-top:15px;"><input class="del-button" type="button" value="删除" onclick="optDelete('${name}','${isDisplay }');"/></div>
+<div style="margin-top:15px;"><input class="del-button" type="button" value="删除" onclick="optDelete('${name}','${isDisplay }','${pagination.pageNo }');"/></div>
 </div>
 </body>
 

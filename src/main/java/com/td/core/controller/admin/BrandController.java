@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -22,8 +23,11 @@ import cn.itcast.common.page.Pagination;
 
 import com.td.common.web.ResponseUtils;
 import com.td.core.bean.product.Brand;
+import com.td.core.bean.product.Product;
 import com.td.core.query.product.BrandQuery;
+import com.td.core.query.product.ProductQuery;
 import com.td.core.service.product.BrandServiceImpl;
+import com.td.core.service.product.ProductService;
 
 
 
@@ -31,12 +35,14 @@ import com.td.core.service.product.BrandServiceImpl;
 public class BrandController {
 	@Autowired
 	private BrandServiceImpl brandServiceImpl;
+	@Autowired
+	private ProductService productService;
 		/**
 	 * 查询列表
 	 * @return
 	 */
 	@RequestMapping("/brand/list.do")
-	public String list(String name,Integer isDisplay,Integer pageNo,ModelMap model){
+	public String list(String name,Integer isDisplay,Integer pageNo,String message,ModelMap model){
 		StringBuilder params = new StringBuilder();
 		BrandQuery brandQuery = new BrandQuery();
 		//判断传进来的名称是否为Null并且还要判断 是否为空串   blank  ""  "   "   emtpy  ""   "  "
@@ -60,6 +66,11 @@ public class BrandController {
 		String url = "/brand/list.do";
 		pagination.pageView(url, params.toString());
 		model.addAttribute("pagination", pagination);//request.setAttribute
+		
+		
+		if(StringUtils.isNotBlank(message)){
+			model.addAttribute("message", message);
+		}
 		return "brand/list";
 	}
 	@RequestMapping("/brand/addUI.do")
@@ -102,7 +113,7 @@ public class BrandController {
 	}
 	@RequestMapping("/brand/editUI.do")
 	public String editUI(Integer id,ModelMap model){
-		Brand brand = brandServiceImpl.findBandById(id);
+		Brand brand = brandServiceImpl.getBandById(id);
 		model.addAttribute("brand", brand);
 		return "brand/edit";
 	}
@@ -112,25 +123,33 @@ public class BrandController {
 		return "redirect:/brand/list.do";
 	}
 	@RequestMapping("/brand/delete.do")
-	public String delete(Integer id,String name,Integer isDisplay,ModelMap model){//当多条件查询时删除，条件还在。
-		brandServiceImpl.delete(id);
+	public String delete(Integer id,String name,Integer isDisplay,Integer pageNo,ModelMap model){//当多条件查询时删除，条件还在。
 		if(StringUtils.isNotBlank(name)){
 			model.addAttribute("name", name);
 		}
 		if(null != isDisplay){
 			model.addAttribute("isDisplay", isDisplay);
+		}
+		model.addAttribute("pageNo", pageNo);
+		Integer i = brandServiceImpl.delete(id);
+		
+		if(i!=null&&i==0){
+			model.addAttribute("message", "删除失败，请先删除品牌对应的  商品 。。。。");
 		}
 		return "redirect:/brand/list.do";//之所以不用这"redirect:/brand/list.do?name="+name+"&isDisplay="+isDisplay,，这样会导致中文乱码，所以采用model
 	}
 	@RequestMapping("/brand/deletes.do")
-	public String deletes(Integer[] ids,String name,Integer isDisplay,ModelMap model){//当多条件查询时删除，条件还在。
-		brandServiceImpl.delete(ids);
+	public String deletes(Integer[] ids,String name,Integer isDisplay,Integer pageNo,ModelMap model){//当多条件查询时删除，条件还在。
+		for (Integer integer : ids) {
+			brandServiceImpl.delete(integer);
+		}
 		if(StringUtils.isNotBlank(name)){
 			model.addAttribute("name", name);
 		}
 		if(null != isDisplay){
 			model.addAttribute("isDisplay", isDisplay);
 		}
+		model.addAttribute("pageNo", pageNo);
 		return "redirect:/brand/list.do";//之所以不用这"redirect:/brand/list.do?name="+name+"&isDisplay="+isDisplay,，这样会导致中文乱码，所以采用model
 	}
 

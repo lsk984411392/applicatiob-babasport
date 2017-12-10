@@ -69,4 +69,6 @@ public interface SkuService {
 	 */
 	public List<Sku> getSkuList(SkuQuery skuQuery);
 	
+	public List<Sku> getSkuListKucundayuling(Integer productId);
+	
 }

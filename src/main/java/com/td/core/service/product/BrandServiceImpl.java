@@ -10,14 +10,18 @@ import org.springframework.transaction.annotation.Transactional;
 import cn.itcast.common.page.Pagination;
 
 import com.td.core.bean.product.Brand;
+import com.td.core.bean.product.Product;
 import com.td.core.dao.product.BrandDao;
 import com.td.core.query.product.BrandQuery;
+import com.td.core.query.product.ProductQuery;
 
 @Service
 @Transactional
 public class BrandServiceImpl {
 	@Resource
 	private BrandDao brandDao;
+	@Resource
+	private ProductService productService;
 	//查询所有品牌记录数
 	@Transactional(readOnly=true)
 	public int getTotal(BrandQuery brandQuery) {
@@ -33,17 +37,27 @@ public class BrandServiceImpl {
 		pagination.setList(brandDao.getBrandList(brandQuery));
 		return pagination;
 	}
+	@Transactional(readOnly=true)
+	public Brand getBandById(Integer id) {
+		Brand i = brandDao.getBrandById(id);
+		return i;
+	}
 	public void add(Brand brand) {
 		 brandDao.add(brand);
 	}
-	public void delete(Integer id) {
-		brandDao.delete(id);
+	public Integer delete(Integer id) {
+		Integer i=0;
+		Brand brand = brandDao.getBrandById(id);
+		ProductQuery productQuery=new ProductQuery();
+		productQuery.setBrandId(brand.getId());
+		List<Product> products = productService.getProductList(productQuery);
+		if(products.size()==0){
+			i = brandDao.delete(id);
+		}
+		return i;
 		
 	}
-	public Brand findBandById(Integer id) {
-		return brandDao.findBrandById(id);
-		
-	}
+	
 	public void update(Brand brand) {
 		brandDao.update(brand);
 		

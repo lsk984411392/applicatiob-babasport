@@ -24,7 +24,7 @@ public class Buyer implements Serializable {
 	private String city;
 	private String town;
 	private String addr;
-	private Integer isDel;
+	private Integer isDel;//'是否已删除:1:未,0:删除了',
 	
 	public enum Gender {
 

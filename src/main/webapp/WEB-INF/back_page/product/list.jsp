@@ -6,23 +6,55 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 <title>babasport-list</title>
 <script type="text/javascript">
-function getTableForm() {
-	return document.getElementById('tableForm');
-}
-function optDelete() {
-	if(Pn.checkedCount('ids')<=0) {
+
+function shangjia(name,brandId,isShow,pageNo) {
+	if(Pn.checkedCount('productId')<=0) {
 		alert("请至少选择一个!");
 		return;
 	}
-	if(!confirm("确定删除吗?")) {
+	if(!confirm("确定上架吗?")) {
 		return;
 	}
-	var f = getTableForm();
-	f.action="o_delete.do";
-	f.submit();
+	var a="/product/shangjia.do?&pageNo=" + pageNo + "&name=" + name + "&brandId=" + brandId + "&isShow=" + isShow;
+	$("#jvForm").attr("action",a);
+	$("#jvForm").submit();
 }
-function changePageNo(){
-	$("input[name='pageNo']").val(1);
+function xiajia(name,brandId,isShow,pageNo) {
+	if(Pn.checkedCount('productId')<=0) {
+		alert("请至少选择一个!");
+		return;
+	}
+	if(!confirm("确定下下架吗?")) {
+		return;
+	}
+	var a="/product/xiajia.do?&pageNo=" + pageNo + "&name=" + name + "&brandId=" + brandId + "&isShow=" + isShow;
+	$("#jvForm").attr("action",a);
+	$("#jvForm").submit();
+}
+function deleteProduct(pid,pname,name,brandId,isShow,pageNo){
+	if(confirm("您确定要删除："+pname+"这件商品吗？")){
+		window.location.href="/product/delete.do?productId="+pid+"&name="+name+"&brandId="+brandId+"&isShow="+isShow+"&pageNo="+pageNo;
+	}
+
+}
+function optDelete(name,brandId,isShow,pageNo) {
+	if(Pn.checkedCount('productId')<=0) {
+		alert("请至少选择一个!");
+		return;
+	}
+	if(!confirm("确定批量删除吗?")) {
+		return;
+	}
+	var a="/product/delete.do?&pageNo=" + pageNo + "&name=" + name + "&brandId=" + brandId + "&isShow=" + isShow;
+	$("#jvForm").attr("action",a);
+	$("#jvForm").submit();
+}
+function quanxuan(productId,checked){
+	$("input[name='productId']").each(function(){
+		$(this).attr("checked",checked);
+	
+	});
+
 }
 </script>
 </head>
@@ -51,13 +83,13 @@ function changePageNo(){
 	</select>
 	<input type="submit" class="query" value="查询"/>
 </form>
-<form method="post" id="tableForm">
-<input type="hidden" value="" name="pageNo"/>
-<input type="hidden" value="" name="queryName"/>
-<table cellspacing="1" cellpadding="0" width="100%" border="0" class="pn-ltable">
+<form method="post" id="jvForm" >
+	<!-- <input type="hidden" value="" name="pageNo"/>
+	<input type="hidden" value="" name="queryName"/> -->
+	<table cellspacing="1" cellpadding="0" width="100%" border="0" class="pn-ltable">
 	<thead class="pn-lthead">
 		<tr>
-			<th width="20"><input type="checkbox" onclick="Pn.checkbox('ids',this.checked)"/></th>
+			<th width="20"><input type="checkbox" onclick="quanxuan('productId',this.checked);"/></th>
 			<th>商品编号</th>
 			<th>商品名称</th>
 			<th>图片</th>
@@ -71,16 +103,19 @@ function changePageNo(){
 	<tbody class="pn-ltbody">
 	<c:forEach items="${pagination.list}" var="product">
 		<tr bgcolor="#ffffff" onmouseover="this.bgColor='#eeeeee'" onmouseout="this.bgColor='#ffffff'">
-			<td><input type="checkbox" name="ids" value="${product.id }"/></td>
+			<td><input type="checkbox" name="productId" value="${product.id }"/></td>
 			<td align="center">${product.no }</td>
 			<td align="center">${product.name }</td>
 			<td align="center"><img width="50" height="50" src="${product.img.url }"/></td>
-			<td align="center">${product.isNew}</td>
-			<td align="center">${product.isHot }</td>
-			<td align="center">${product.isCommend }</td>
-			<td align="center">${product.isShow }</td>
+			<td align="center"><c:if test="${product.isNew==1}">是</c:if><c:if test="${product.isNew==0}">否</c:if></td>
+			<td align="center"><c:if test="${product.isHot==1}">是</c:if><c:if test="${product.isHot==0}">否</c:if></td>
+			<td align="center"><c:if test="${product.isCommend==1}">是</c:if><c:if test="${product.isCommend==0}">否</c:if></td>
+			<td align="center"><c:if test="${product.isShow==1}">上架</c:if><c:if test="${product.isShow==0}">下架</c:if></td>
 			<td align="center">
-			<a href="#" class="pn-opt">查看</a> | <a href="#" class="pn-opt">修改</a> | <a href="#" onclick="if(!confirm('您确定删除吗？')) {return false;}" class="pn-opt">删除</a> | <a href="../sku/list.jsp" class="pn-opt">库存</a>
+			<a href="javascript:void(0)" class="pn-opt" onclick="window.open('/product/detail.shtml?productId=${product.id}')">查看</a> | 
+			<!-- <a href="javascript:void(0)" class="pn-opt">修改</a> --> | 
+			<a href="javascript:void(0)" onclick="deleteProduct('${product.id}','${product.name }','${name }','${brandId }','${isShow }','${pagination.pageNo }')" class="pn-opt">删除</a> | 
+			<a href="/sku/list.do?productId=${product.id }&productNo=${product.no}" class="pn-opt">库存</a>
 			</td>
 		</tr>
 		</c:forEach>
@@ -92,7 +127,11 @@ function changePageNo(){
 	</c:forEach>
 	
 </span></div>
-<div style="margin-top:15px;"><input class="del-button" type="button" value="删除" onclick="optDelete();"/><input class="add" type="button" value="上架" onclick="optDelete();"/><input class="del-button" type="button" value="下架" onclick="optDelete();"/></div>
+<div style="margin-top:15px;"><input class="del-button" type="button" value="删除" onclick="optDelete('${name }','${brandId }','${isShow }','${pagination.pageNo }');"/>
+	
+	<input class="add" type="button" value="上架" onclick="shangjia('${name}','${brandId }','${isShow }','${pagination.pageNo }')"/>
+	
+	<input class="del-button" type="button" value="下架" onclick="xiajia('${name}','${brandId }','${isShow }','${pagination.pageNo }');"/></div>
 </form>
 </div>
 </body>

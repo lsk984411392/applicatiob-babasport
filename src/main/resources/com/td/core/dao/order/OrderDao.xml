@@ -209,7 +209,7 @@
 		<include refid="orderListOrder" />
 	</select>
 	<!-- 添加 -->
-	<insert id="addOrder" parameterType="Order">
+	<insert id="addOrder" parameterType="Order" useGeneratedKeys="true" keyProperty="id" >
 		INSERT INTO bbs_order
 		<trim prefix="(" suffix=")" suffixOverrides=",">
 				<if test="id != null">

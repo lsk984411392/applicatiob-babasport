@@ -20,6 +20,13 @@ $(function(){
 		}
 	});
 });
+$(document).ready(function(){
+	$("#d1").offset({"top":35,"left":160});
+
+});
+function login(){
+	window.location.href = "/shopping/toLogin.shtml?returnUrl="+window.location.href;
+}
 </script>
 </head>
 <body>
@@ -30,29 +37,38 @@ $(function(){
 		</span>
 	</p>
 	<ul class="r uls">
-		<li class="dev">
-			您好,欢迎来到新巴巴运动网！
-		</li>
-	<li class="dev"><a href="javascript:void(0)" onclick="login()"  title="登陆">[登陆]</a></li>
-	<li class="dev"><a href="javascript:void(0)" onclick="register()" title="免费注册">[免费注册]</a></li>
-	<li class="dev"><a href="javascript:void(0)" onclick="logout()" title="退出">[退出]</a></li>
-	<li class="dev"><a href="javascript:void(0)" onclick="myOrder()" title="我的订单">我的订单</a></li>
-	<li class="dev"><a href="#" title="在线客服">在线客服</a></li>
-	<li class="dev after"><a href="#" title="English">English</a></li>
+		<c:if test="${empty buyer_session}">
+			<li class="dev" >您好,请先登录哦！</li>
+			<li class="dev"><a href="javascript:void(0)" onclick="login()"  title="登陆">[登陆]</a></li>
+			<li class="dev"><a href="javascript:void(0)" onclick="window.location.href='/product/toRegister.shtml'" title="免费注册">[免费注册]</a></li>
+			<li class="dev"><a href="javascript:void(0)" onclick="window.location.href='/product/toCart.shtml'" title="退出">[购物车]</a></li>
+			<li class="dev"><a href="javascript:void(0)" onclick="window.location.href ='/buyer/index.shtml'" title="我的订单">我的订单</a></li>
+		</c:if>
+		<c:if test="${!empty buyer_session}">
+			<li class="dev">您好,欢迎 <font color="red">${buyer_session.realName }</font>来到新巴巴运动网！</li>
+			<li class="dev"><a href="javascript:void(0)" onclick="window.location.href ='/buyer/toLogout.shtml'" title="退出">[退出]</a></li>
+			<li class="dev"><a href="javascript:void(0)" onclick="window.location.href='/product/toCart.shtml'" title="退出">[购物车]</a></li>
+			<li class="dev"><a href="javascript:void(0)" onclick="window.location.href ='/buyer/index.shtml'" title="我的订单">我的订单</a></li>
+		</c:if>
+		
+		<li class="dev"><a href="#" title="在线客服">在线客服</a></li>
+		<li class="dev after"><a href="#" title="English">English</a></li>
 	</ul>
 </div></div>
+
+<div class="h-logo" id="d1"><a href="http://localhost:8080">&nbsp;&nbsp;&nbsp;&nbsp;<img src="/res/img/pic/logo-1.png" /></a></div>
 <ul class="ul step st3_2">
 <li title="1.我的购物车">1.我的购物车</li>
 <li title="2.填写核对订单信息" class="here">2.填写核对订单信息</li>
 <li title="3.成功提交订单">3.成功提交订单</li>
 </ul>
-<form action="confirmOrder.jsp" method="post">
+<form action="/buyer/submitOrder.shtml" method="post">
 
 <div class="w ofc case">
 	<h2 class="h2 h2_r mt"><em title="收货人信息">收货人信息      [<a href="#"><font style="color:blue;">修改</font></a>]</em><cite></cite></h2>
 	<div class="box bg_white">
 		<dl class="distr">
-			<dd>范冰冰   13888888888 <span style="margin-left: 30px">北京海淀区西三旗 XXXXXXXXXXXXXXXXXXXXXXXXXXX</span></dd>
+			<dd>${addr.name }   ${addr.phone } <span style="margin-left: 30px">${addr.city } ${addr.addr }</span></dd>
 		</dl>
 	</div>
 	
@@ -64,7 +80,7 @@ $(function(){
 			<dt><input type="radio" name="paymentWay" value="3"/>邮局汇款<span class="gray" style="margin-left: 140px"> 公司转账通过快钱平台转账 转帐后1-3个工作日内到帐</span></dt>
 			<dd id="paymentCash"  style="display: none;">
 				<label>付款方式：</label>
-				<input type="radio" name="paymentCash" value="0" checked="checked"/>现金&nbsp;&nbsp;<input type="radio" name="paymentCash" value="1"/>POS刷卡
+				<input type="radio" name="paymentCash" value="0" />现金&nbsp;&nbsp;<input type="radio" name="paymentCash" value="1"/>POS刷卡
 			</dd>
 			<dt style="margin-top: 40px"><input type="radio" value="1" name="deliveryMethod" checked="checked" />快递运输</dt>
 			<dd class="box_d bg_gray2 ofc">
@@ -116,37 +132,20 @@ $(function(){
 		</tr>                                                                                           
 		</thead>
 		<tbody>
+		<c:forEach items="${buyCart.items }" var="item">
 			<tr>
-				<td>20141028114510004</td>
+				<td>${item.sku.product.no }</td>
 				<td class="img48x20">
-					<span class="inb"><img src="/res/img/pic/ppp0.jpg"></span>
-					<a target="block" href="javascript:void(0);"> 喜悦2014秋冬新款瑜伽服三件套装 韩版女士瑜珈舞蹈服 愈--西瓜红--S</a>
+					<span class="inb"><img src="${item.sku.product.img.url }"></span>
+					<a target="block" href="javascript:void(0);"> ${item.sku.product.name }--${item.sku.color.name }--${item.sku.size }</a>
 				</td>
-				<td>￥333.01元</td>
-				<td>x1</td>
-				<td>88</td>
+				<td>￥ ${item.sku.skuPrice }元</td>
+				<td>x${item.amount }</td>
+				<td>${item.sku.stockInventory }</td>
 			</tr>
-			<tr>
-				<td>20141028114510004</td>
-				<td class="img48x20">
-					<span class="inb"><img src="/res/img/pic/ppp0.jpg"></span>
-					<a target="block" href="javascript:void(0);"> 喜悦2014秋冬新款瑜伽服三件套装 韩版女士瑜珈舞蹈服 愈--典雅灰--M</a>
-				</td>
-				<td>￥235.0元</td>
-				<td>x1</td>
-				<td>333</td>
-			</tr>
-			<tr>
-				<td>20141028114510004</td>
-				<td class="img48x20">
-					<span class="inb"><img src="/res/img/pic/ppp0.jpg"></span>
-					<a target="block" href="javascript:void(0);"> 喜悦2014秋冬新款瑜伽服三件套装 韩版女士瑜珈舞蹈服 愈--草绿--XL</a>
-				</td>
-				<td>￥121.0元</td>
-				<td>x1</td>
-				<td>66</td>
-			</tr>
+		</c:forEach>
 		</tbody>
+		
 		</table>
 	</div>
 
@@ -155,11 +154,11 @@ $(function(){
 		<div class="ofc">
 			<div class="r">
 				<dl class="total">
-					<dt>订单金额：<cite>(共<var id="totalNum">3</var>个商品)</cite></dt>
-					<dd><em class="l">商品金额：</em>￥<var>689.01</var></dd>
+					<dt>订单金额：<cite>(共<var id="totalNum">${buyCart.productAmount }</var>个商品)</cite></dt>
+					<dd><em class="l">商品金额：</em>￥<var>${buyCart.productPrice }</var></dd>
 					<dd><em class="l">返现：</em>￥<var>0.00</var></dd>
-					<dd><em class="l">运费：</em>￥<var>0.0</var></dd>
-					<dd class="orange"><em class="l">应付总额：</em>￥<var id="totalMoney">689.01</var></dd>
+					<dd><em class="l">运费：</em>￥<var>${buyCart.fee }</var></dd>
+					<dd class="orange"><em class="l">应付总额：</em>￥<var id="totalMoney">${buyCart.totalPrice }</var></dd>
 					<dd class="alg_c"><input type="submit" class="hand btn136x36a" value="提交订单" id="submitOrderID"></dd>
 				</dl>
 			</div>

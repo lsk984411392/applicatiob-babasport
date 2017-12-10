@@ -23,18 +23,19 @@
 <div class="left">
 <%@ include file="/WEB-INF/back_page/date.jsp" %>
      <ul class="w-lful">
-		<li><a target="rightFrame" href="order_right.jsp">货到付款</a></li>
-		<li><a target="rightFrame" href="order_right.jsp">待付款</a></li>
-		<li><a target="rightFrame" href="order_right.jsp">已取消</a></li>
-		<li><a target="rightFrame" href="order_right.jsp">已付款</a></li>
-		<li><a target="rightFrame" href="order_right.jsp">仓库配货</a></li>
-		<li><a target="rightFrame" href="order_right.jsp">商品出库</a></li>
-		<li><a target="rightFrame" href="order_right.jsp">等待收货</a></li>
-		<li><a target="rightFrame" href="order_right.jsp">已完成</a></li>
-		<li><a target="rightFrame" href="order_right.jsp">待退货</a></li>
-		<li><a target="rightFrame" href="order_right.jsp">待退款</a></li>
-		<li><a target="rightFrame" href="order_right.jsp">已退货</a></li>
-		<li><a target="rightFrame" href="order_right.jsp">已退款</a></li>
+		<li><a target="rightFrame" href="/order/list.do?isPaiy=0">货到付款</a></li>
+		<li><a target="rightFrame" href="/order/list.do?isPaiy=1">待付款</a></li>
+		<!-- <li><a target="rightFrame" href="order_right.jsp">已取消</a></li> -->
+		<li><a target="rightFrame" href="/order/list.do?isPaiy=2">已付款</a></li>
+		
+		<li><a target="rightFrame" href="javascript:void(0)">仓库配货</a></li>
+		<li><a target="rightFrame" href="javascript:void(0)">商品出库</a></li>
+		<li><a target="rightFrame" href="javascript:void(0)">等待收货</a></li>
+		<li><a target="rightFrame" href="javascript:void(0)">已完成</a></li>
+		<li><a target="rightFrame" href="javascript:void(0)">待退货</a></li>
+		<li><a target="rightFrame" href="javascript:void(0)">待退款</a></li>
+		<li><a target="rightFrame" href="javascript:void(0)">已退货</a></li>
+		<li><a target="rightFrame" href="javascript:void(0)">已退款</a></li>
      </ul>
 </div>
 </body>

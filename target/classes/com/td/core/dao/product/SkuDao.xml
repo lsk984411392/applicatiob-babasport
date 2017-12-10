@@ -24,6 +24,12 @@
 		<result property="skuType" column="sku_type" />
 		<result property="sales" column="sales" />
 	</resultMap>
+	
+	<select id="getSkuListKucundayuling" parameterType="int" resultMap="sku">
+		SELECT id,product_id,color_id,size,delive_fee,sku_price,stock_inventory,sku_upper_limit,location,sku_img,sku_sort,sku_name,market_price,
+		create_time,update_time,create_user_id,update_user_id,last_status,sku_type,sales FROM bbs_sku
+		where stock_inventory>0 and product_id=#{id}
+	</select>
 	<!-- Select SQL -->
 	<sql id="skuSelector">
 		SELECT
@@ -281,18 +287,22 @@
 				<if test="size != null">
 					size,
 				</if>
-				<if test="deliveFee != null">
+				<!-- <if test="deliveFee != null">
 					delive_fee,
-				</if>
-				<if test="skuPrice != null">
+				</if> -->
+				delive_fee,
+				<!-- <if test="skuPrice != null">
 					sku_price,
-				</if>
-				<if test="stockInventory != null">
+				</if> -->
+				sku_price,
+				<!-- <if test="stockInventory != null">
 					stock_inventory,
-				</if>
-				<if test="skuUpperLimit != null">
+				</if> -->
+				stock_inventory,
+				<!-- <if test="skuUpperLimit != null">
 					sku_upper_limit,
-				</if>
+				</if> -->
+				sku_upper_limit,
 				<if test="location != null">
 					location,
 				</if>
@@ -305,9 +315,10 @@
 				<if test="skuName != null">
 					sku_name,
 				</if>
-				<if test="marketPrice != null">
+				<!-- <if test="marketPrice != null">
 					market_price,
-				</if>
+				</if> -->
+				market_price,
 				<if test="createTime != null">
 					create_time,
 				</if>
@@ -344,18 +355,22 @@
 					<if test="size != null">
 						#{size},
 					</if>
-					<if test="deliveFee != null">
+					<!-- <if test="deliveFee != null">
 						#{deliveFee},
-					</if>
-					<if test="skuPrice != null">
+					</if> -->
+					10.00,
+					<!-- <if test="skuPrice != null">
 						#{skuPrice},
-					</if>
-					<if test="stockInventory != null">
+					</if> -->
+					100,
+					<!-- <if test="stockInventory != null">
 						#{stockInventory},
-					</if>
-					<if test="skuUpperLimit != null">
+					</if> -->
+					1000,
+					<!-- <if test="skuUpperLimit != null">
 						#{skuUpperLimit},
-					</if>
+					</if> -->
+					10,
 					<if test="location != null">
 						#{location},
 					</if>
@@ -368,9 +383,10 @@
 					<if test="skuName != null">
 						#{skuName},
 					</if>
-					<if test="marketPrice != null">
+					<!-- <if test="marketPrice != null">
 						#{marketPrice},
-					</if>
+					</if> -->
+					100,
 					<if test="createTime != null">
 						#{createTime},
 					</if>

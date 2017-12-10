@@ -40,6 +40,10 @@ public class ProvinceServiceImpl implements ProvinceService {
 	public Province getProvinceByKey(Integer id) {
 		return provinceDao.getProvinceByKey(id);
 	}
+	@Transactional(readOnly = true)
+	public Province getProvinceByCode(String code) {
+		return provinceDao.getProvinceByCode(code);
+	}
 	
 	@Transactional(readOnly = true)
 	public List<Province> getProvincesByKeys(List<Integer> idList) {

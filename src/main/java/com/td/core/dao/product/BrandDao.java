@@ -11,10 +11,11 @@ public interface BrandDao {
 	//public List<Brand> getBrandListWithPage(BrandQuery brandQuery);
 	public List<Brand> getBrandList(BrandQuery brandQuery);
 	public void add(Brand brand);
-	public void delete(Integer id);
+	public Integer delete(Integer id);
 	public Brand findBrandById(Integer id);
 	public void update(Brand brand);
 	public void deleteBypiliang(Integer[] ids);
+	public Brand getBrandById(Integer id);
 	
 	
 }

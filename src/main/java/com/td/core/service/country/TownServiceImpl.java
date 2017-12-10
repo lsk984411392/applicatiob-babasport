@@ -79,4 +79,10 @@ public class TownServiceImpl implements TownService {
 	public List<Town> getTownList(TownQuery townQuery) {
 		return townDao.getTownList(townQuery);
 	}
+
+	@Override
+	public Town getTownByCode(String code) {
+		// TODO Auto-generated method stub
+		return townDao.getTownByCode(code);
+	}
 }

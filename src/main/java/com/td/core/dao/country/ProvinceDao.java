@@ -18,6 +18,8 @@ public interface ProvinceDao {
 	 * @param provinceQuery
 	 */
 	public Province getProvinceByKey(Integer id);
+	public Province getProvinceByCode(String code);
+	
 
 	/**
 	 * 根据主键批量查找

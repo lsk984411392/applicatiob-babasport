@@ -18,6 +18,7 @@ public interface TownDao {
 	 * @param townQuery
 	 */
 	public Town getTownByKey(Integer id);
+	public Town getTownByCode(String code);
 
 	/**
 	 * 根据主键批量查找

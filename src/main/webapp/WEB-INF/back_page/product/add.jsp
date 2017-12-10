@@ -46,6 +46,7 @@ $(function(){
 				var fck = new FCKeditor("productdesc");
 				fck.BasePath = "/res/fckeditor/";
 				fck.Height = 400 ;
+				fck.Config["ImageUploadURL"]="/product/fckupload.do"
 				fck.ReplaceTextarea();
 			}
 		});
@@ -71,7 +72,7 @@ function submitImgSize1Upload(){
 <div class="box-positon">
 	<div class="rpos">当前位置: 商品管理 - 添加</div>
 	<form class="ropt">
-		<input type="submit" onclick="this.form.action='v_list.do';" value="返回列表" class="return-button"/>
+		<input type="button" onclick="window.location.href='/product/list.do';" value="返回列表" class="return-button"/>
 	</form>
 	<div class="clear"></div>
 </div>

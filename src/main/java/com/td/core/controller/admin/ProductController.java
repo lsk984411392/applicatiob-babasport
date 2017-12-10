@@ -1,13 +1,17 @@
 package com.td.core.controller.admin;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import net.fckeditor.response.UploadResponse;
 
 import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -18,6 +22,7 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import cn.itcast.common.page.Pagination;
 
@@ -27,7 +32,6 @@ import com.td.core.bean.product.Color;
 import com.td.core.bean.product.Feature;
 import com.td.core.bean.product.Img;
 import com.td.core.bean.product.Product;
-import com.td.core.bean.product.Sku;
 import com.td.core.bean.product.Type;
 import com.td.core.query.product.BrandQuery;
 import com.td.core.query.product.ColorQuery;
@@ -94,6 +98,50 @@ public class ProductController {
 		model.addAttribute("pagination", pagination);
 		return "product/list";
 	}
+	@RequestMapping("/product/shangjia.do")
+	public String list(Integer[] productId,String name,Integer brandId,Integer isShow,Integer pageNo,ModelMap model){
+		Product product=new Product();
+		for (Integer i : productId) {
+			product.setId(i);
+			product.setIsShow(1);
+			productServiceImpl.updateProductByKey(product);
+		}
+		if(StringUtils.isNotBlank(name)){
+			model.addAttribute("name", name);
+		}
+		if(brandId!=null){
+			model.addAttribute("brandId", brandId);
+		}
+		if(isShow==null){
+			model.addAttribute("isShow", 0);
+		}else{
+			model.addAttribute("isShow", isShow);
+		}
+		model.addAttribute("pageNo", pageNo);
+		return "redirect:/product/list.do";
+	}
+	@RequestMapping("/product/xiajia.do")
+	public String xiajia(Integer[] productId,String name,Integer brandId,Integer isShow,Integer pageNo,ModelMap model){
+		Product product=new Product();
+		for (Integer i : productId) {
+			product.setId(i);
+			product.setIsShow(0);
+			productServiceImpl.updateProductByKey(product);
+		}
+		if(StringUtils.isNotBlank(name)){
+			model.addAttribute("name", name);
+		}
+		if(brandId!=null){
+			model.addAttribute("brandId", brandId);
+		}
+		if(isShow==null){
+			model.addAttribute("isShow", 0);
+		}else{
+			model.addAttribute("isShow", isShow);
+		}
+		model.addAttribute("pageNo", pageNo);
+		return "redirect:/product/list.do";
+	}
 	@RequestMapping("/product/addUI.do")
 	public String addUI(ModelMap model){
 		//商品类型 
@@ -147,5 +195,51 @@ public class ProductController {
 		JSONObject js=new JSONObject();
 		js.put("relativePath", relativePath);
 		ResponseUtils.renderText(response, js.toString());
+	}
+	@RequestMapping("/product/fckupload.do")
+	public void uploadfck(HttpServletRequest request,HttpServletResponse response) throws Exception{
+		MultipartHttpServletRequest mh=(MultipartHttpServletRequest) request;
+		Map<String, MultipartFile> map = mh.getFileMap();
+		Set<String> keys = map.keySet();
+		String key = keys.iterator().next();
+		MultipartFile mf = map.get(key);
+		
+		SimpleDateFormat  sd=new SimpleDateFormat("yyyyMMdd-HHmmss-SSS");//日期时间毫秒
+		String s1 = sd.format(new Date()).toString();
+		
+		String s2=FilenameUtils.getExtension(mf.getOriginalFilename());//获得扩展名,只是扩展名没有点.
+		String path = request.getRealPath("/fckupload");
+		File f=new File(path);
+		if(!f.exists()){
+			f.mkdirs();
+		}
+		FileOutputStream out2=new FileOutputStream(new File(path,s1+"."+s2));
+		out2.write(mf.getBytes());
+		out2.close();
+		String relativePath="/fckupload/"+s1+"."+s2;
+		UploadResponse ur=UploadResponse.getOK(relativePath);
+		response.getWriter().print(ur);
+	}
+	
+	@RequestMapping("/product/delete.do")
+	public String delete(Integer[] productId,String name,Integer brandId,Integer isShow,Integer pageNo,ModelMap model) throws Exception{
+		List<Integer> idList=new ArrayList<Integer>();
+		for (Integer pid : productId) {
+			idList.add(pid);
+		}
+		productServiceImpl.deleteByKeys(idList);
+		if(StringUtils.isNotBlank(name)){
+			model.addAttribute("name", name);
+		}
+		if(brandId!=null){
+			model.addAttribute("brandId", brandId);
+		}
+		if(isShow==null){
+			model.addAttribute("isShow", 0);
+		}else{
+			model.addAttribute("isShow", isShow);
+		}
+		model.addAttribute("pageNo", pageNo);
+		return "redirect:/product/list.do";
 	}
 }

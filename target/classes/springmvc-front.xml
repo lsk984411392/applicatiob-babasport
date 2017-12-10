@@ -24,5 +24,12 @@
 	</bean>
      
      
-     
+    <!--  pe配置springmv拦截器，因为处理器映射器和处理器适配器是一对，所以在配置的时候要都配上才能配置拦截器 -->
+     <bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping">
+     	<property name="interceptors" >
+     		<ref bean="loginInterceptor"/>
+     	</property>
+     </bean>
+     <bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter"></bean>
+     <bean id="loginInterceptor" class="com.td.core.web.SpringmvcInterceptor"></bean>
 </beans>

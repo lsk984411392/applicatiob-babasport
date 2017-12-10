@@ -44,31 +44,198 @@
 <script type="text/javascript">
 //加入购物车
 function addCart(){
-	alert("添加购物车成功!");
+
+	var url="/product/addCart.shtml";
+	var param={"skuId":skuId,"amount":$("#num").val(),"buyLimit":buyLimit,"productId":'${product.id}'};
+	$.post(url,param,function(data){
+	
+		alert(data.message);
+	},"json");
+	
+}
+function login(){
+	window.location.href = "/shopping/toLogin.shtml?returnUrl="+window.location.href;
 }
 //立即购买
 function buy(){
-	window.location.href='cart.jsp';
+	window.location.href="/product/toCart.shtml?skuId="+skuId+"&amount="+$("#num").val()+"&buyLimit="+buyLimit+"&productId="+'${product.id}';
 }
+$(function(){
+	//初始化点击第一个颜色
+	$("#colors a:first").trigger("click");
+	//给A标签绑定事件   -
+	$("#sub").click(function(){
+		//件数  1
+		var num = $("#num").val();
+		num--;
+		if(num == 0){
+			//alert();
+			return;
+		}
+		//赋值
+		$("#num").val(num);
+	});
+	//+
+	$("#add").click(function(){
+		//件数  8
+		var num = $("#num").val();
+		num++;
+		//num 9      9
+		if(num > buyLimit){
+			alert("此商品只能买" + buyLimit + "件");
+			return;
+		}
+		//赋值
+		$("#num").val(num);
+	});
+});
+//全局变量
+//颜色ID
+var colorId;
+//SkuId
+var skuId;
+//限购
+var buyLimit;
+
+//点击颜色  ￥128.00  id 颜色ID
+function colorToRed(target,id){
+	//赋值
+	colorId = id;
+	//先清理其它颜色
+	$("#colors a").each(function(){
+		$(this).attr("class","changToWhite");
+	});
+	//先清理尺码  都变成不可点
+	$("#sizes a").each(function(){
+		$(this).attr("class","not-allow");
+	});
+	
+	$(target).attr("class","changToRed");
+	//控制尺码 
+	var flag = 0;
+	//
+	<c:forEach items="${skus}" var="sku">
+	  //判断SKu中与当前选择的颜色ID一样的,获取出所有尺码   
+		if(id == '${sku.colorId}'){
+			//四次  S  L  XL  XXL
+			if(flag == 0){
+				$("#" + '${sku.size}').attr("class","changToRed");
+				flag = 1;
+				//赋值
+				//巴巴价
+				$("#price").html("￥" + '${sku.skuPrice}');
+				//市场价
+				$("#mprice").html("￥" + '${sku.marketPrice}');
+				//运费
+				$("#fee").html('${sku.deliveFee}');
+				//库存
+				$("#stock").html('${sku.stockInventory}');
+				//skuId
+				skuId = '${sku.id}';
+				//
+				//限购
+				buyLimit = '${sku.skuUpperLimit}';
+				
+			}else{
+				$("#" + '${sku.size}').attr("class","changToWhite");
+			}
+		}
+	</c:forEach>
+	
+}
+//点击尺码
+function sizeToRed(target,id){
+	
+	var cc = $(target).attr("class");
+	if(cc == "not-allow"){
+		return ;
+	}
+	//先清理尺码  都变成不可点
+	$("#sizes a").each(function(){
+		var c = $(this).attr("class");
+		if(c != "not-allow"){
+			$(this).attr("class","changToWhite");
+		}
+	});
+	//尺码变红
+	$(target).attr("class","changToRed");
+	
+	<c:forEach items="${skus}" var="sku">
+	  //判断SKu中与当前选择的颜色ID一样的,获取出所有尺码   
+		if(colorId == '${sku.colorId}' && id == '${sku.size}'){
+				//赋值
+				//巴巴价
+				$("#price").html("￥" + '${sku.skuPrice}');
+				//市场价
+				$("#mprice").html("￥" + '${sku.marketPrice}');
+				//运费
+				$("#fee").html('${sku.deliveFee}');
+				//库存
+				$("#stock").html('${sku.stockInventory}');
+				//skuId
+				skuId = '${sku.id}';
+				//
+				//限购
+				buyLimit = '${sku.skuUpperLimit}';
+		}
+	</c:forEach>
+}
+function login(){
+	window.location.href = "/shopping/toLogin.shtml?returnUrl="+window.location.href;
+}
+function logout(){
+	window.location.href = "/buyer/toLogout.shtml";
+}
+function myOrder(){
+	window.location.href = "/buyer/index.shtml";
+}
+$(document).ready(function(){
+	var url="/product/viewCart.shtml";
+	$.post(url,null,function(data){
+		var items=data.items;
+		var ht="";
+		var amount=0;
+		var totalp=0.00;
+		for(i=0;i<items.length;i++){
+			ht+="<p class='dt'>"+items[i].sku.product.name+"---"+items[i].sku.color.name+"---"+items[i].sku.size+"---"
+			+"<b><var>¥"+items[i].sku.skuPrice+"</var><span>x"+items[i].amount+"</span></b></p>";
+			amount+=items[i].amount;
+			totalp+=(items[i].amount)*(items[i].sku.skuPrice);
+		}
+		$("#ul1").html(ht);
+		
+		$("#totaljian").html(amount);
+		$("#totaljian2").html(amount);
+		$("#totalPrice").html(totalp);
+	},'json');
+
+});
 </script>
 </head>
 <body>
 <div class="bar"><div class="bar_w">
 	<p class="l">
 		<span class="l">
-			收藏本网站！北京<a href="#" title="更换">[更换]</a>
+			收藏本网站！上海<a href="#" title="更换">[更换]</a>
 		</span>
 	</p>
 	<ul class="r uls">
-		<li class="dev">
-			您好,欢迎来到新巴巴运动网！
-		</li>
-	<li class="dev"><a href="javascript:void(0)" onclick="login()"  title="登陆">[登陆]</a></li>
-	<li class="dev"><a href="javascript:void(0)" onclick="register()" title="免费注册">[免费注册]</a></li>
-	<li class="dev"><a href="javascript:void(0)" onclick="logout()" title="退出">[退出]</a></li>
-	<li class="dev"><a href="javascript:void(0)" onclick="myOrder()" title="我的订单">我的订单</a></li>
-	<li class="dev"><a href="#" title="在线客服">在线客服</a></li>
-	<li class="dev after"><a href="#" title="English">English</a></li>
+	<c:if test="${empty buyer_session}">
+			<li class="dev" >您好,请先登录哦！</li>
+			<li class="dev"><a href="javascript:void(0)" onclick="login()"  title="登陆">[登陆]</a></li>
+			<li class="dev"><a href="javascript:void(0)" onclick="window.location.href='/product/toRegister.shtml'" title="免费注册">[免费注册]</a></li>
+			<li class="dev"><a href="javascript:void(0)" onclick="window.location.href='/product/toCart.shtml'" title="退出">[购物车]</a></li>
+			<li class="dev"><a href="javascript:void(0)" onclick="window.location.href ='/buyer/index.shtml'" title="我的订单">我的订单</a></li>
+		</c:if>
+		<c:if test="${!empty buyer_session}">
+			<li class="dev">您好,欢迎 <font color="red">${buyer_session.realName }</font>来到新巴巴运动网！</li>
+			<li class="dev"><a href="javascript:void(0)" onclick="window.location.href ='/buyer/toLogout.shtml'" title="退出">[退出]</a></li>
+			<li class="dev"><a href="javascript:void(0)" onclick="window.location.href='/product/toCart.shtml'" title="退出">[购物车]</a></li>
+			<li class="dev"><a href="javascript:void(0)" onclick="window.location.href ='/buyer/index.shtml'" title="我的订单">我的订单</a></li>
+		</c:if>
+		
+		<li class="dev"><a href="#" title="在线客服">在线客服</a></li>
+		<li class="dev after"><a href="#" title="English">English</a></li>
 	</ul>
 </div></div>
 <div class="w loc">
@@ -80,97 +247,59 @@ function buy(){
 	    </div>
 	</div>
 	<dl id="cart" class="cart r">
-		<dt><a href="#" title="结算">结算</a>购物车:<b id="">123</b>件</dt>
+	
+		<dt><a href="javascript:void(0)" title="结算" onclick="window.location.href ='/buyer/toOrder.shtml'"> 去结算</a  >购物车:共有  <b id="totaljian" >0</b>件</dt>
 		<dd class="hidden">
 			<p class="alg_c hidden">购物车中还没有商品，赶紧选购吧！</p>
 			<h3 title="最新加入的商品">最新加入的商品</h3>
-			<ul class="uls">
-				<li>
-					<a href="#" title="依琦莲2014瑜伽服套装新 瑜珈健身服三件套 广场舞蹈服装 女瑜伽服送胸垫 长袖紫色 M全场支持货到付款 全网最低价 千人超高好评瑜伽服赶紧抢！全五分好评截图联系客服还返现五元">
-					<img src="/res/img/pic/p50x50.jpg" alt="依琦莲2014瑜伽服套装新 瑜珈健身服三件套 广场舞蹈服装 女瑜伽服送胸垫 长袖紫色 M全场支持货到付款 全网最低价 千人超高好评瑜伽服赶紧抢！全五分好评截图联系客服还返现五元" /></a>
-					<p class="dt"><a href="#" title="依琦莲2014瑜伽服套装新 瑜珈健身服三件套 广场舞蹈服装 女瑜伽服送胸垫 长袖紫色 M全场支持货到付款 全网最低价 千人超高好评瑜伽服赶紧抢！全五分好评截图联系客服还返现五元">依琦莲2014瑜伽服套装新 瑜珈健身服三件套 广场舞蹈服装 女瑜伽服送胸垫 长袖紫色 M全场支持货到付款 全网最低价 千人超高好评瑜伽服赶紧抢！全五分好评截图联系客服还返现五元</a></p>
-					<p class="dd">
-						<b><var>¥128</var><span>x1</span></b>
-						<a href="javascript:void(0);" title="删除" class="del">删除</a>
-					</p>
-				</li>
-				<li>
-					<a href="#" title="依琦莲2014瑜伽服套装新 瑜珈健身服三件套 广场舞蹈服装 女瑜伽服送胸垫 长袖紫色 M全场支持货到付款 全网最低价 千人超高好评瑜伽服赶紧抢！全五分好评截图联系客服还返现五元">
-					<img src="/res/img/pic/p50x50.jpg" alt="依琦莲2014瑜伽服套装新 瑜珈健身服三件套 广场舞蹈服装 女瑜伽服送胸垫 长袖紫色 M全场支持货到付款 全网最低价 千人超高好评瑜伽服赶紧抢！全五分好评截图联系客服还返现五元" /></a>
-					<p class="dt"><a href="#" title="依琦莲2014瑜伽服套装新 瑜珈健身服三件套 广场舞蹈服装 女瑜伽服送胸垫 长袖紫色 M全场支持货到付款 全网最低价 千人超高好评瑜伽服赶紧抢！全五分好评截图联系客服还返现五元">依琦莲2014瑜伽服套装新 瑜珈健身服三件套 广场舞蹈服装 女瑜伽服送胸垫 长袖紫色 M全场支持货到付款 全网最低价 千人超高好评瑜伽服赶紧抢！全五分好评截图联系客服还返现五元</a></p>
-					<p class="dd">
-						<b><var>¥128</var><span>x1</span></b>
-						<a href="javascript:void(0);" title="删除" class="del">删除</a>
-					</p>
-				</li>
-				<li>
-					<a href="#" title="依琦莲2014瑜伽服套装新 瑜珈健身服三件套 广场舞蹈服装 女瑜伽服送胸垫 长袖紫色 M全场支持货到付款 全网最低价 千人超高好评瑜伽服赶紧抢！全五分好评截图联系客服还返现五元">
-					<img src="/res/img/pic/p50x50.jpg" alt="依琦莲2014瑜伽服套装新 瑜珈健身服三件套 广场舞蹈服装 女瑜伽服送胸垫 长袖紫色 M全场支持货到付款 全网最低价 千人超高好评瑜伽服赶紧抢！全五分好评截图联系客服还返现五元" /></a>
-					<p class="dt"><a href="#" title="依琦莲2014瑜伽服套装新 瑜珈健身服三件套 广场舞蹈服装 女瑜伽服送胸垫 长袖紫色 M全场支持货到付款 全网最低价 千人超高好评瑜伽服赶紧抢！全五分好评截图联系客服还返现五元">依琦莲2014瑜伽服套装新 瑜珈健身服三件套 广场舞蹈服装 女瑜伽服送胸垫 长袖紫色 M全场支持货到付款 全网最低价 千人超高好评瑜伽服赶紧抢！全五分好评截图联系客服还返现五元</a></p>
-					<p class="dd">
-						<b><var>¥128</var><span>x1</span></b>
-						<a href="javascript:void(0);" title="删除" class="del">删除</a>
-					</p>
-				</li>
-				<li>
-					<a href="#" title="依琦莲2014瑜伽服套装新 瑜珈健身服三件套 广场舞蹈服装 女瑜伽服送胸垫 长袖紫色 M全场支持货到付款 全网最低价 千人超高好评瑜伽服赶紧抢！全五分好评截图联系客服还返现五元">
-					<img src="/res/img/pic/p50x50.jpg" alt="依琦莲2014瑜伽服套装新 瑜珈健身服三件套 广场舞蹈服装 女瑜伽服送胸垫 长袖紫色 M全场支持货到付款 全网最低价 千人超高好评瑜伽服赶紧抢！全五分好评截图联系客服还返现五元" /></a>
-					<p class="dt"><a href="#" title="依琦莲2014瑜伽服套装新 瑜珈健身服三件套 广场舞蹈服装 女瑜伽服送胸垫 长袖紫色 M全场支持货到付款 全网最低价 千人超高好评瑜伽服赶紧抢！全五分好评截图联系客服还返现五元">依琦莲2014瑜伽服套装新 瑜珈健身服三件套 广场舞蹈服装 女瑜伽服送胸垫 长袖紫色 M全场支持货到付款 全网最低价 千人超高好评瑜伽服赶紧抢！全五分好评截图联系客服还返现五元</a></p>
-					<p class="dd">
-						<b><var>¥128</var><span>x1</span></b>
-						<a href="javascript:void(0);" title="删除" class="del">删除</a>
-					</p>
-				</li>
-				<li>
-					<a href="#" title="依琦莲2014瑜伽服套装新 瑜珈健身服三件套 广场舞蹈服装 女瑜伽服送胸垫 长袖紫色 M全场支持货到付款 全网最低价 千人超高好评瑜伽服赶紧抢！全五分好评截图联系客服还返现五元">
-					<img src="/res/img/pic/p50x50.jpg" alt="依琦莲2014瑜伽服套装新 瑜珈健身服三件套 广场舞蹈服装 女瑜伽服送胸垫 长袖紫色 M全场支持货到付款 全网最低价 千人超高好评瑜伽服赶紧抢！全五分好评截图联系客服还返现五元" /></a>
-					<p class="dt"><a href="#" title="依琦莲2014瑜伽服套装新 瑜珈健身服三件套 广场舞蹈服装 女瑜伽服送胸垫 长袖紫色 M全场支持货到付款 全网最低价 千人超高好评瑜伽服赶紧抢！全五分好评截图联系客服还返现五元">依琦莲2014瑜伽服套装新 瑜珈健身服三件套 广场舞蹈服装 女瑜伽服送胸垫 长袖紫色 M全场支持货到付款 全网最低价 千人超高好评瑜伽服赶紧抢！全五分好评截图联系客服还返现五元</a></p>
-					<p class="dd">
-						<b><var>¥128</var><span>x1</span></b>
-						<a href="javascript:void(0);" title="删除" class="del">删除</a>
-					</p>
-				</li>
+			<ul class="uls" id="ul1">
+				
 			</ul>
 			<div>
-				<p>共<b>5</b>件商品&nbsp;&nbsp;&nbsp;&nbsp;共计<b class="f20">¥640.00</b></p>
-				<a href="#" title="去购物车结算" class="inb btn120x30c">去购物车结算</a>
+				<p>共<b id="totaljian2">0</b>件商品&nbsp;&nbsp;&nbsp;&nbsp;共计<b class="f20" id="totalPrice">¥0.00</b></p>
+				<a href="javascript:void(0)" title="去购物车结算" class="inb btn120x30c" onclick="window.location.href ='/buyer/toOrder.shtml'">去购物车结算</a>
 			</div>
 		</dd>
+		
+		
 	</dl>
 </div>
 
 <div class="w ofc mt">
 	<div class="l">
 		<div class="showPro">
-			<div class="big"><a id="showImg" class="cloud-zoom" href="/res/img/pic/ppp0.jpg" rel="adjustX:10,adjustY:-1"><img alt="" src="/res/img/pic/ppp0.jpg"></a></div>
+			<div class="big"><a id="showImg" class="cloud-zoom" href="${product.img.url }" rel="adjustX:10,adjustY:-1"><img alt="" src="${product.img.url }"></a></div>
 		</div>
 	</div>
 	<div class="r" style="width: 640px">
 		<ul class="uls form">
-			<li><h2>依琦莲2014瑜伽服套装新款 瑜珈健身服三件套 广场舞蹈服装 性价比最高的瑜伽服 三件套 送胸垫 支持货到付款</h2></li>
-			<li><label>巴  巴 价：</label><span class="word"><b class="f14 red mr">￥128.00</b>(市场价:<del>￥150.00</del>)</span></li>
+			<li><h2>${product.name }</h2></li>
+			<li><label>巴  巴 价：</label><span class="word"><b class="f14 red mr" id="price">￥128.00</b>(市场价:<del id="mprice">￥150.00</del>)</span></li>
 			<li><label>商品评价：</label><span class="word"><span class="val_no val3d4" title="4分">4分</span><var class="blue">(已有888人评价)</var></span></li>
-			<li><label>运　　费：</label><span class="word">10元</span></li>
-			<li><label>库　　存：</label><span class="word" id="stockInventory">100</span><span class="word" >件</span></li>
+			<li><label>运　　费：</label><span class="word" id="fee">10元</span></li>
+			<li><label>库　　存：</label><span class="word" id="stock">100</span><span class="word" >件</span></li>
 			<li><label>选择颜色：</label>
 				<div id="colors" class="pre spec">
-					<a onclick="colorToRed(this,9)" href="javascript:void(0)" title="西瓜红" class="changToRed"><img width="25" height="25" data-img="1" src="/res/img/pic/ppp00.jpg" alt="西瓜红 "><i>西瓜红</i></a>
-					<a onclick="colorToRed(this,11)" href="javascript:void(0)" title="墨绿" class="changToWhite"><img width="25" height="25" data-img="1" src="/res/img/pic/ppp00.jpg" alt="墨绿 "><i>墨绿</i></a>
-					<a onclick="colorToRed(this,18)" href="javascript:void(0)" title="浅粉" class="changToWhite"><img width="25" height="25" data-img="1" src="/res/img/pic/ppp00.jpg" alt="浅粉 "><i>浅粉</i></a>
+				<c:forEach items="${ colors}" var="color">
+					<a onclick="colorToRed(this,${color.id})" href="javascript:void(0)" title="${color.name }" class="changToWhite"><img width="25" height="25" data-img="1" src="${product.img.url }" alt="${color.name } "><i>${color.name }</i></a>
+				</c:forEach>
 				</div>
 			</li>
 			<li id="sizes"><label>尺　　码：</label>
-						<a href="javascript:void(0)" class="not-allow"  id="S">S</a>
-						<a href="javascript:void(0)" class="not-allow"  id="M">M</a>
-						<a href="javascript:void(0)" class="not-allow"  id="L">L</a>
-						<a href="javascript:void(0)" class="not-allow"  id="XL">XL</a>
-						<a href="javascript:void(0)" class="not-allow"  id="XXL">XXL</a>
+						<a href="javascript:void(0)" class="not-allow"  id="S" onclick="sizeToRed(this,'S')">S</a>
+						<a href="javascript:void(0)" class="not-allow"  id="M" onclick="sizeToRed(this,'M')">M</a>
+						<a href="javascript:void(0)" class="not-allow"  id="L" onclick="sizeToRed(this,'L')">L</a>
+						<a href="javascript:void(0)" class="not-allow"  id="XL" onclick="sizeToRed(this,'XL')">XL</a>
+						<a href="javascript:void(0)" class="not-allow"  id="XXL" onclick="sizeToRed(this,'XXL')">XXL</a>
 			</li>
 			<li><label>我 要 买：</label>
 				<a id="sub" class="inb arr" style="border: 1px solid #919191;width: 10px;height: 10px;line-height: 10px;text-align: center;" title="减" href="javascript:void(0);" >-</a>
 				<input id="num" type="text" value="1" name="" size="1" readonly="readonly">
-				<a id="add" class="inb arr" style="border: 1px solid #919191;width: 10px;height: 10px;line-height: 10px;text-align: center;" title="加" href="javascript:void(0);">+</a></li>
-			<li class="submit"><input type="button" value="" class="hand btn138x40" onclick="buy();"/><input type="button" value="" class="hand btn138x40b" onclick="addCart()"/></li>
+				<a id="add" class="inb arr" style="border: 1px solid #919191;width: 10px;height: 10px;line-height: 10px;text-align: center;" title="加" href="javascript:void(0);">+</a>
+				</li>
+			<li class="submit">
+				<input type="button" value="" class="hand btn138x40" onclick="buy();"/>
+				<input type="button" value="" class="hand btn138x40b" onclick="addCart()" /></li>
 		</ul>
 	</div>
 </div>
@@ -179,118 +308,31 @@ function buy(){
 	<h2 class="h2 h2_l mt"><em title="销量排行榜">销量排行榜</em><cite></cite></h2>
 	<div class="box bg_white">
 		<ul class="uls x_50x50">
-			<li>
+			<!-- <li>
 				<var class="sfont">1</var>
 				<a href="#" title="富一代" target="_blank" class="pic"><img src="/res/img/pic/ppp.jpg" alt="依琦莲2014瑜伽服套装新" /></a>
 				<dl>
-					<!-- dt 8个文字+... -->
+					dt 8个文字+...
 					<dt><a href="#" title="依琦莲2014瑜伽服套装新" target="_blank">依琦莲2014瑜伽服套装新</a></dt>
 					<dd class="orange">￥120 ~ ￥150</dd>
 				</dl>
-			</li>
-			<li>
-				<var class="sfont">2</var>
-				<a href="#" title="富一代" target="_blank" class="pic"><img src="/res/img/pic/ppp.jpg" alt="依琦莲2014瑜伽服套装新" /></a>
-				<dl>
-					<!-- dt 8个文字+... -->
-					<dt><a href="#" title="依琦莲2014瑜伽服套装新" target="_blank">依琦莲2014瑜伽服套装新</a></dt>
-					<dd class="orange">￥120 ~ ￥150</dd>
-				</dl>
-			</li>
-			<li>
-				<var class="sfont">3</var>
-				<a href="#" title="富一代" target="_blank" class="pic"><img src="/res/img/pic/ppp.jpg" alt="依琦莲2014瑜伽服套装新" /></a>
-				<dl>
-					<!-- dt 8个文字+... -->
-					<dt><a href="#" title="依琦莲2014瑜伽服套装新" target="_blank">依琦莲2014瑜伽服套装新</a></dt>
-					<dd class="orange">￥120 ~ ￥150</dd>
-				</dl>
-			</li>
-			<li>
-				<a href="#" title="富一代" target="_blank" class="pic"><img src="/res/img/pic/ppp.jpg" alt="依琦莲2014瑜伽服套装新" /></a>
-				<dl>
-					<!-- dt 8个文字+... -->
-					<dt><a href="#" title="依琦莲2014瑜伽服套装新" target="_blank">依琦莲2014瑜伽服套装新</a></dt>
-					<dd class="orange">￥120 ~ ￥150</dd>
-				</dl>
-			</li>
-			<li>
-				<a href="#" title="富一代" target="_blank" class="pic"><img src="/res/img/pic/ppp.jpg" alt="依琦莲2014瑜伽服套装新" /></a>
-				<dl>
-					<!-- dt 8个文字+... -->
-					<dt><a href="#" title="依琦莲2014瑜伽服套装新" target="_blank">依琦莲2014瑜伽服套装新</a></dt>
-					<dd class="orange">￥120 ~ ￥150</dd>
-				</dl>
-			</li>
-			<li>
-				<a href="#" title="富一代" target="_blank" class="pic"><img src="/res/img/pic/ppp.jpg" alt="依琦莲2014瑜伽服套装新" /></a>
-				<dl>
-					<!-- dt 8个文字+... -->
-					<dt><a href="#" title="依琦莲2014瑜伽服套装新" target="_blank">依琦莲2014瑜伽服套装新</a></dt>
-					<dd class="orange">￥120 ~ ￥150</dd>
-				</dl>
-			</li>
-			<li>
-				<a href="#" title="富一代" target="_blank" class="pic"><img src="/res/img/pic/ppp.jpg" alt="依琦莲2014瑜伽服套装新" /></a>
-				<dl>
-					<!-- dt 8个文字+... -->
-					<dt><a href="#" title="依琦莲2014瑜伽服套装新" target="_blank">依琦莲2014瑜伽服套装新</a></dt>
-					<dd class="orange">￥120 ~ ￥150</dd>
-				</dl>
+			</li> -->
+			
 			</li>
 		</ul>
 	</div>
 	<h2 class="h2 h2_l mt"><em title="我的浏览记录">我的浏览记录</em><cite></cite></h2>
 	<div class="box bg_white">
 		<ul class="uls x_50x50">
-			<li>
+			<!-- <li>
 				<a href="#" title="富一代" target="_blank" class="pic"><img src="/res/img/pic/ppp.jpg" alt="依琦莲2014瑜伽服套装新" /></a>
 				<dl>
-					<!-- dt 8个文字+... -->
+					dt 8个文字+...
 					<dt><a href="#" title="依琦莲2014瑜伽服套装新" target="_blank">依琦莲2014瑜伽服套装新</a></dt>
 					<dd class="orange">￥120 ~ ￥150</dd>
 				</dl>
-			</li>
-			<li>
-				<a href="#" title="富一代" target="_blank" class="pic"><img src="/res/img/pic/ppp.jpg" alt="依琦莲2014瑜伽服套装新" /></a>
-				<dl>
-					<!-- dt 8个文字+... -->
-					<dt><a href="#" title="依琦莲2014瑜伽服套装新" target="_blank">依琦莲2014瑜伽服套装新</a></dt>
-					<dd class="orange">￥120 ~ ￥150</dd>
-				</dl>
-			</li>
-			<li>
-				<a href="#" title="富一代" target="_blank" class="pic"><img src="/res/img/pic/ppp.jpg" alt="依琦莲2014瑜伽服套装新" /></a>
-				<dl>
-					<!-- dt 8个文字+... -->
-					<dt><a href="#" title="依琦莲2014瑜伽服套装新" target="_blank">依琦莲2014瑜伽服套装新</a></dt>
-					<dd class="orange">￥120 ~ ￥150</dd>
-				</dl>
-			</li>
-			<li>
-				<a href="#" title="富一代" target="_blank" class="pic"><img src="/res/img/pic/ppp.jpg" alt="依琦莲2014瑜伽服套装新" /></a>
-				<dl>
-					<!-- dt 8个文字+... -->
-					<dt><a href="#" title="依琦莲2014瑜伽服套装新" target="_blank">依琦莲2014瑜伽服套装新</a></dt>
-					<dd class="orange">￥120 ~ ￥150</dd>
-				</dl>
-			</li>
-			<li>
-				<a href="#" title="富一代" target="_blank" class="pic"><img src="/res/img/pic/ppp.jpg" alt="依琦莲2014瑜伽服套装新" /></a>
-				<dl>
-					<!-- dt 8个文字+... -->
-					<dt><a href="#" title="依琦莲2014瑜伽服套装新" target="_blank">依琦莲2014瑜伽服套装新</a></dt>
-					<dd class="orange">￥120 ~ ￥150</dd>
-				</dl>
-			</li>
-			<li>
-				<a href="#" title="富一代" target="_blank" class="pic"><img src="/res/img/pic/ppp.jpg" alt="依琦莲2014瑜伽服套装新" /></a>
-				<dl>
-					<!-- dt 8个文字+... -->
-					<dt><a href="#" title="依琦莲2014瑜伽服套装新" target="_blank">依琦莲2014瑜伽服套装新</a></dt>
-					<dd class="orange">￥120 ~ ￥150</dd>
-				</dl>
-			</li>
+			</li> -->
+			
 		</ul>
 	</div>
 	
@@ -304,7 +346,9 @@ function buy(){
 			<a href="javascript:void(0);" title="包装清单" rel="#detailTab3">包装清单</a></em><cite></cite></h2>
 		<div class="box bg_white ofc">
 			<div id="detailTab1" class="detail">
-				<img src="/res/img/pic/p800b.jpg" /><img src="/res/img/pic/p800a.jpg" /><img src="/res/img/pic/p800c.jpg" /><img src="/res/img/pic/p800d.jpg" />
+				<%-- <img src="${product.img.url }" /><img src="${product.img.url }" /><img src="/res/img/pic/p800c.jpg" /><img src="/res/img/pic/p800d.jpg" /> --%>
+				
+				${product.description }
 			</div>
 			
 			<div id="detailTab2" style="display:none">

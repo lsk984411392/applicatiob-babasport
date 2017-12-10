@@ -24,6 +24,7 @@ public interface CityService {
 	 * 根据主键查询
 	 */
 	public City getCityByKey(Integer id);
+	public City getCityByCode(String code);
 
 	/**
 	 * 根据主键批量查询

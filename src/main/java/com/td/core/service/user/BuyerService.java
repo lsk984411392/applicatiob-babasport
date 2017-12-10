@@ -15,10 +15,11 @@ import com.td.core.query.user.BuyerQuery;
 public interface BuyerService {
 	/**
 	 * 基本插入
+	 * @param phone 
 	 * 
 	 * @return
 	 */
-	public Integer addBuyer(Buyer buyer);
+	public Integer addBuyer(Buyer buyer, String phone);
 
 	/**
 	 * 根据主键查询

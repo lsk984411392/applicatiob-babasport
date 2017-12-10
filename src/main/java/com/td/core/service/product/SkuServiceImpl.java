@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,6 +24,10 @@ public class SkuServiceImpl implements SkuService {
 
 	@Resource
 	SkuDao skuDao;
+	@Autowired
+	private ColorService colorService;
+	@Autowired
+	private ProductService productService;
 
 	/**
 	 * 插入数据库
@@ -38,7 +43,10 @@ public class SkuServiceImpl implements SkuService {
 	 */
 	@Transactional(readOnly = true)
 	public Sku getSkuByKey(Integer id) {
-		return skuDao.getSkuByKey(id);
+		Sku sku = skuDao.getSkuByKey(id);
+		sku.setColor(colorService.getColorByKey(sku.getColorId()));
+		sku.setProduct(productService.getProductByKey(sku.getProductId()));
+		return sku;
 	}
 	
 	@Transactional(readOnly = true)
@@ -77,6 +85,20 @@ public class SkuServiceImpl implements SkuService {
 	
 	@Transactional(readOnly = true)
 	public List<Sku> getSkuList(SkuQuery skuQuery) {
-		return skuDao.getSkuList(skuQuery);
+		
+		List<Sku> skus = skuDao.getSkuList(skuQuery);
+		for (Sku sku : skus) {
+			sku.setColor(colorService.getColorByKey(sku.getColorId()));
+		}
+		return skus;
+	}
+	@Transactional(readOnly = true)
+	public List<Sku> getSkuListKucundayuling(Integer productId) {
+		
+		List<Sku> skus = skuDao.getSkuListKucundayuling(productId);
+		for (Sku sku : skus) {
+			sku.setColor(colorService.getColorByKey(sku.getColorId()));
+		}
+		return skus;
 	}
 }

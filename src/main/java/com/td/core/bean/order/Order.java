@@ -1,7 +1,11 @@
 package com.td.core.bean.order;
 
-import java.util.*;
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import com.td.core.bean.BuyCart;
 
 /**
  * 订单  --主
@@ -29,6 +33,22 @@ public class Order implements Serializable {
 	private String note;
 	private String buyerId;
 	
+	private BuyCart buyCart;
+	
+	private List<Detail> details=new ArrayList<Detail>();
+	
+	public List<Detail> getDetails() {
+		return details;
+	}
+	public void setDetails(List<Detail> details) {
+		this.details = details;
+	}
+	public BuyCart getBuyCart() {
+		return buyCart;
+	}
+	public void setBuyCart(BuyCart buyCart) {
+		this.buyCart = buyCart;
+	}
 	/** 特殊处理字段   */
 	/** 支付方式           */
 	public String getPaymentWayName() {

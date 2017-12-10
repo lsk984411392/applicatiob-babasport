@@ -19,6 +19,7 @@ import com.td.core.bean.product.Sku;
 import com.td.core.dao.product.ProductDao;
 import com.td.core.query.product.ImgQuery;
 import com.td.core.query.product.ProductQuery;
+import com.td.core.query.product.SkuQuery;
 /**
  * 商品事务层
  * @author lixu
@@ -100,7 +101,12 @@ public class ProductServiceImpl implements ProductService {
 	 */
 	@Transactional(readOnly = true)
 	public Product getProductByKey(Integer id) {
-		return productDao.getProductByKey(id);
+		 Product p = productDao.getProductByKey(id);
+		 ImgQuery imgQuery=new ImgQuery();
+		 imgQuery.setProductId(p.getId());
+		 List<Img> imgList = imgService.getImgList(imgQuery);
+		 p.setImg(imgList.get(0));
+		 return p;
 	}
 	
 	@Transactional(readOnly = true)
@@ -118,7 +124,25 @@ public class ProductServiceImpl implements ProductService {
 	}
 
 	public Integer deleteByKeys(List<Integer> idList) {
-		return productDao.deleteByKeys(idList);
+		for (Integer integer : idList) {
+			ImgQuery imgQuery=new ImgQuery();
+			imgQuery.setProductId(integer);
+			List<Img> imgs = imgService.getImgList(imgQuery);
+			if(imgs!=null&&imgs.size()>0){
+				imgService.deleteByKey(imgs.get(0).getId());
+			}
+			
+			SkuQuery skuQuery=new SkuQuery();
+			skuQuery.setProductId(integer);
+			List<Sku> skus = skuService.getSkuList(skuQuery);
+			if(skus!=null&&skus.size()>0){
+				for (Sku sku : skus) {
+					skuService.deleteByKey(sku.getId());
+				}
+			}
+		}
+		Integer i = productDao.deleteByKeys(idList);
+		return i;
 	}
 
 	/**

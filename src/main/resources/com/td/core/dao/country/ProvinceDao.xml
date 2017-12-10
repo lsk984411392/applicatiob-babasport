@@ -63,6 +63,11 @@
 		WHERE
 		id=#{id}
 	</select>
+	<select id="getProvinceByCode" resultMap="province" parameterType="hashMap">
+		SELECT id,code,name FROM bbs_province
+		WHERE
+		code=#{code}
+	</select>
 	<select id="getProvincesByKeys" resultMap="province" parameterType="ArrayList">
 		SELECT id,code,name FROM bbs_province
 		WHERE

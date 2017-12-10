@@ -21,11 +21,13 @@
 		<tr>
 			<th width="20"><input type="checkbox" onclick="Pn.checkbox('ids',this.checked)"/></th>
 			<th>订单号</th>
+			<th>用户名</th>
+			<!-- <th>用户真实姓名</th> -->
 			<th>订单金额</th>
-			<th>运费</th>
-			<th>应付金额</th>
+			<!-- <th>运费</th> -->
+			<!-- <th>应付金额</th> -->
 			<th>支付方式</th>
-			<th>支付要求</th>
+			<th>付款方式</th>
 			<th>支付状态</th>
 			<th>订单状态</th>
 			<th>下单时间</th>
@@ -35,76 +37,34 @@
 	</thead>
 	<tbody class="pn-ltbody">
 		
-		<tr bgcolor="#ffffff" onmouseover="this.bgColor='#eeeeee'" onmouseout="this.bgColor='#ffffff'">
-			<td><input type="checkbox" name="ids" value="73"/></td>
-			<td align="center">20--20141212114007973</td>
-			<td align="center">128.0</td>
-			<td align="center">0.0</td>
-			<td align="center">128.11</td>
-			<td align="center">货到到付</td>
-			<td align="center">现金</td>
-			<td align="center">货到到付</td>
-			<td align="center">提交订单</td>
-			<td align="center">2014-12-12 11:40:08.0</td>
-			<td align="center"></td>
-			<td align="center">
-			<a href="view.jsp" class="pn-opt">查看</a>
-			</td>
-		</tr>
-		
-		<tr bgcolor="#ffffff" onmouseover="this.bgColor='#eeeeee'" onmouseout="this.bgColor='#ffffff'">
-			<td><input type="checkbox" name="ids" value="73"/></td>
-			<td align="center">26--20141212170911104</td>
-			<td align="center">128.0</td>
-			<td align="center">0.0</td>
-			<td align="center">128.0</td>
-			<td align="center">货到到付</td>
-			<td align="center">现金</td>
-			<td align="center">货到到付</td>
-			<td align="center">提交订单</td>
-			<td align="center">2014-12-12 17:09:11.0</td>
-			<td align="center"></td>
-			<td align="center">
-			<a href="view.jsp" class="pn-opt">查看</a>
-			</td>
-		</tr>
-		
-		<tr bgcolor="#ffffff" onmouseover="this.bgColor='#eeeeee'" onmouseout="this.bgColor='#ffffff'">
-			<td><input type="checkbox" name="ids" value="73"/></td>
-			<td align="center">33--20141212172259427</td>
-			<td align="center">328.0</td>
-			<td align="center">0.0</td>
-			<td align="center">328.0</td>
-			<td align="center">货到到付</td>
-			<td align="center">现金</td>
-			<td align="center">货到到付</td>
-			<td align="center">提交订单</td>
-			<td align="center">2014-12-12 17:22:59.0</td>
-			<td align="center"></td>
-			<td align="center">
-			<a href="view.jsp" class="pn-opt">查看</a>
-			</td>
-		</tr>
-		
-		<tr bgcolor="#ffffff" onmouseover="this.bgColor='#eeeeee'" onmouseout="this.bgColor='#ffffff'">
-			<td><input type="checkbox" name="ids" value="73"/></td>
-			<td align="center">34--20141212172311831</td>
-			<td align="center">200.0</td>
-			<td align="center">0.0</td>
-			<td align="center">200.0</td>
-			<td align="center">货到到付</td>
-			<td align="center">现金</td>
-			<td align="center">货到到付</td>
-			<td align="center">提交订单</td>
-			<td align="center">2014-12-12 17:23:11.0</td>
-			<td align="center"></td>
-			<td align="center">
-			<a href="view.jsp" class="pn-opt">查看</a>
-			</td>
-		</tr>
+		<c:forEach items="${pagination.list }" var="order">
+			<tr bgcolor="#ffffff" onmouseover="this.bgColor='#eeeeee'" onmouseout="this.bgColor='#ffffff'">
+				<td><input type="checkbox" name="ids" value="73"/></td>
+				<td align="center">${order.oid }</td>
+				<td align="center">${order.buyerId }</td>
+				<td align="center">${order.totalPrice }</td>
+				<%-- <td align="center">${order.deliverFee }</td> --%>
+				<%-- <td align="center">${order.payableFee }</td> --%>
+				<td align="center">${order.paymentWayName }</td>
+				<c:if test="${order.paymentCashName ==null}"><td align="center">${order.paymentWayName }</td></c:if>
+				
+				<c:if test="${order.paymentCashName !=null}"><td align="center">${order.paymentCashName }</td></c:if>
+				<%-- <td align="center">${order.paymentCashName }</td> --%>
+				<td align="center">${order.isPaiyName }</td>
+				<td align="center">${order.stateName }</td>
+				<td align="center">${fn:substring(order.createDate,0,19) }</td>
+				<td align="center"></td>
+				<td align="center">
+				<a href="/order/view.do?orderId=${order.id }" class="pn-opt">查看</a>
+				</td>
+			</tr>
+		</c:forEach>
 		
 	</tbody>
 </table>
+<c:forEach items="${ pagination.pageView}" var="p">
+	${p }
+</c:forEach>
 <div style="margin-top:15px;">
 <!-- 	<input class="del-button" type="button" value="取消" onclick="optCancel();"/>
 	<input class="submit" type="button" value="通过" onclick="optPass();"/> -->
