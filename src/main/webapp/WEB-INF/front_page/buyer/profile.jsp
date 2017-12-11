@@ -5,7 +5,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 <head>
-<title>新巴巴运动网_用户中心</title>
+<title>康康运动网_用户中心</title>
 <link rel="stylesheet" href="/res/css/style.css" />
 <script src="/res/js/jquery.js"></script>
 <script src="/res/js/com.js"></script>
@@ -36,7 +36,11 @@
 			$("#town").html(h); 
 		},'json');
 	}
-$(document).ready(function(){
+
+	function tijiao(){
+		$("#jvForm").submit();
+	}
+	$(document).ready(function(){
 	var url="/product/viewCart.shtml";
 	$.post(url,null,function(data){
 		var items=data.items;
@@ -58,6 +62,7 @@ $(document).ready(function(){
 
 });
 </script>
+</script>
 <body>
 <div class="bar"><div class="bar_w">
 	<p class="l">
@@ -77,7 +82,7 @@ $(document).ready(function(){
 </div></div>
 <div class="w loc">
 	<div class="h-title">
-		<div class="h-logo"><a href="http://localhost:8080"><img src="/res/img/pic/logo-1.png" /></a></div>
+		<div class="h-logo"><a href="/" ><img src="/res/img/pic/logo-1.png" /></a></div>
 	    <div class="h-search">
 	      	<input type="text" />
 	        <div class="h-se-btn"><a href="#">搜索</a></div>
@@ -127,19 +132,19 @@ $(document).ready(function(){
 				<h2 class="h2 h2_r2"><em title="个人资料">个人资料</em></h2>
 				
 				
-				<form id="jvForm" action="/buyer/updateProfile.shtml" method="post">
-					<input type="hidden" name="returnUrl" value="${returnUrl}"/>
-					<input type="hidden" name="processUrl" value="${processUrl}"/>
+				<form id="jvForm" action="/buyer/updatePro.shtml"  method="post">
+					<%-- <input type="hidden" name="returnUrl" value="${returnUrl}"/>
+					<input type="hidden" name="processUrl" value="${processUrl}"/> --%>
 					
 					<ul class="uls form">
-					<li id="errorName" class="errorTip" style="display:none">${error}</li>
+					<%-- <li id="errorName" class="errorTip" style="display:none">${error}</li> --%>
 					<li>
 						<input type="hidden" name="username" value="${buyer.username }">
 						<label for="username">用 户 名：</label>
 						<span class="word">${buyer.username }</span>
 					</li>
 					<li>
-						<label for="username">邮　　箱：</label>
+						<label for="email">邮　　箱：</label>
 						<span class="word">${buyer.email }</span>
 					</li>
 					<li>
@@ -149,9 +154,9 @@ $(document).ready(function(){
 					</li>
 					<li>
 						<label for="gender">性　　别：</label>
-						<span class="word"><input type="radio" name="gender" <c:if test="${buyer.gender=='SECRECY' }">checked="checked"</c:if>/>保密
-						<input type="radio" name="gender" <c:if test="${buyer.gender=='MAN' }">checked="checked"</c:if>/>男
-						<input type="radio" name="gender" <c:if test="${buyer.gender=='WOMAN' }">checked="checked"</c:if>/>女</span>
+						<span class="word"><input type="radio" name="gender" value="SECRECY" <c:if test="${buyer.gender=='SECRECY' }">checked="checked"</c:if>/>保密
+						<input type="radio" name="gender" value="MAN" <c:if test="${buyer.gender=='MAN' }">checked="checked"</c:if>/>男
+						<input type="radio" name="gender" value="WOMAN" <c:if test="${buyer.gender=='WOMAN' }">checked="checked"</c:if>/>女</span>
 					</li>
 					<li>
 						<label for="residence">居 住 地：</label>
@@ -184,13 +189,14 @@ $(document).ready(function(){
 						<span class="bg_text"><input type="text" id="address" name="addr" maxLength="32" value="${buyer.addr }"/></span>
 						<!-- <span class="pos"><span class="tip errorTip">用户名为4-20位字母、数字或中文组成，字母区分大小写。</span></span> -->
 					</li>
-					<li><label for="">&nbsp;</label><input type="submit" value="保存" class="hand btn66x23"  /></li>
+					<li><label for="">&nbsp;</label><input type="button" value="保存" class="hand btn66x23"  onclick="tijiao()"/></li>
 					</ul>
 				</form>
 			</div>
 		</div>
 	</div>
 </div>
+
 <div class="mode">
 	<div class="tl"></div><div class="tr"></div>
 	<ul class="uls">
@@ -247,4 +253,5 @@ $(document).ready(function(){
 	</ul>
 </div>
 </body>
+
 </html>

@@ -5,7 +5,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 <head>
-<title>新巴巴运动网_用户中心</title>
+<title>康康运动网_用户中心</title>
 <link rel="stylesheet" href="/res/css/style.css" />
 <script src="/res/js/jquery.js"></script>
 <script src="/res/js/com.js"></script>
@@ -14,7 +14,7 @@
 	
 	function idDelteOrder(orderId){
 		if(confirm("您确定删除此订单")){
-			window.location.href="/buyer/deleteOrder.shtml?orderId="+orderId;
+			window.location.href="/buyer/deleteOrder.shtml?orderId="+orderId+"&pageNo="+'${pagination.pageNo}';
 		}
 	}
 $(document).ready(function(){
@@ -59,7 +59,7 @@ $(document).ready(function(){
 </div></div>
 <div class="w loc">
 	<div class="h-title">
-		<div class="h-logo"><a href="http://localhost:8080"><img src="/res/img/pic/logo-1.png" /></a></div>
+		<div class="h-logo"><a href="/" ><img src="/res/img/pic/logo-1.png" /></a></div>
 	    <div class="h-search">
 	      	<input type="text" />
 	        <div class="h-se-btn"><a href="#">搜索</a></div>
@@ -105,18 +105,18 @@ $(document).ready(function(){
 	</div>
 	<div class="r wr profile">
 		<h2 class="h2 h2_filter"><em style="color:red">全部订单</em></h2>
-		<table cellspacing="0" summary="" class="tab tab4">
+		<table cellspacing="0" summary="" class="tab tab4" >
 		<thead>
 		<tr>
 		<th width="12%">订单编号</th>
-		<th>商品名称</th>
-		<th>数量</th>
+		<th width="7&">商品名称</th>
+		<th width="5%">数量</th>
 		<th width="10%">收货人</th>
-		<th width="10%">总金额（元）</th>
+		<th width="5%">总金额（元）</th>
 		<th width="10%">下单时间</th>
 		<th width="10%">付款详情</th>
-		<th width="10%">订单状态</th>
-		<th width="20%">操作</th>
+		<th width="7%">订单状态</th>
+		<th width="30%">操作</th>
 		</tr>     
 		</thead>
 		<tbody>        
@@ -128,21 +128,15 @@ $(document).ready(function(){
 					<ul >
 						<c:forEach items="${ order.details}" var="detail">
 						<li>
-							<!-- <a href="#" title="依琦莲2014瑜伽服套装新款" class="pic"><img src="../../res/img/pic/p50x50.jpg" alt="依琦莲2014瑜伽服套装新款" /></a>
-							<dl>
-								<dt><a href="#" title="依琦莲2014瑜伽服套装新款">依琦莲2014瑜伽服套装新款</a></dt>
-							</dl> -->
-							
 								<dl>
 									<dt>${detail.productName }</dt>
 								</dl>
-							
 						</li>
 					</c:forEach>
 					</ul>
 				</td>
 				<td >
-					<ul >
+					 <ul >
 						<c:forEach items="${ order.details}" var="detail">
 						
 								<dl>
@@ -152,6 +146,7 @@ $(document).ready(function(){
 						
 					</c:forEach>
 					</ul>
+					
 				</td>
 				<td>${addr.name }</td>
 				<td>￥${order.totalPrice }</td>
@@ -161,7 +156,7 @@ $(document).ready(function(){
 					<c:if test="${order.isPaiy==1 }"><a class="blue" href="javascript:void(0);" onclick="window.open('/buyer/toPay.shtml?orderId=${order.oid}')">去付款</a>  </c:if>
 					<c:if test="${order.isPaiy==2 }">已完成</c:if><br />
 				</td>
-				<td class="blue"><a href="javascript:void(0);" title="查看详情" onclick="window.open('/buyer/viewOrder.shtml?orderId=${order.id}')">查看详情</a>
+				<td class="blue"><a href="javascript:void(0);" title="查看详情" onclick="window.open('/buyer/viewOrder.shtml?orderId=${order.id}')">详情</a>
 				<a href="javascript:void(0);" title="查看详情" onclick="idDelteOrder(${order.id})">删除订单</a>
 				<br />
 				</td>

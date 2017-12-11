@@ -10,7 +10,7 @@
 <meta http-equiv="keywords" content="keyword1,keyword2,keyword3">
 <meta http-equiv="description" content="This is my page">
 
-<title>新巴巴运动网-电子商城</title>
+<title>康康运动网-电子商城</title>
 <link rel="stylesheet" href="/res/css/style.css" />
 <script src="/res/js/jquery.js"></script>
 <script src="/res/js/com.js"></script>
@@ -18,6 +18,10 @@
 //登陆
 function login(){
 	window.location.href = "/shopping/toLogin.shtml?returnUrl="+window.location.href;
+}
+function searchp(){
+	var a=$("#s1").val();
+	window.location.href="/product/display/list.shtml?searchName="+a;
 }
 $(document).ready(function(){
 	var url="/product/viewCart.shtml";
@@ -82,10 +86,10 @@ $(document).ready(function(){
 </div></div>
 <div class="w loc">
 	<div class="h-title">
-		<div class="h-logo"><a href="http://localhost:8080"><img src="/res/img/pic/logo-1.png" /></a></div>
+		<div class="h-logo"><a href="/"><img src="/res/img/pic/logo-1.png" /></a></div>
 	    <div class="h-search">
-	      	<input type="text" />
-	        <div class="h-se-btn"><a href="#">搜索</a></div>
+	      	<input type="text" id="s1" name="searchName" value="${searchName }" />
+	        <div class="h-se-btn"><a href="javascript:void(0)" onclick="searchp()">搜索</a></div>
 	    </div>
 	</div>
 	<dl id="cart" class="cart r">
@@ -172,7 +176,7 @@ $(document).ready(function(){
 					<a href="javascript:void(0);" title="不限" class="here">不限</a>
 					<c:forEach items="${ brands}" var="brand">
 						<a href="javascript:void(0);" title="${brand.name }" 
-						onclick="javascript:window.location.href='/product/display/list.shtml?brandId=${brand.id }&brandName=${brand.name }&typeId=${typeId }&typeName=${typeName }'">${brand.name }</a>
+						onclick="javascript:window.location.href='/product/display/list.shtml?brandId=${brand.id }&brandName=${brand.name }&typeId=${typeId }&typeName=${typeName }&featureName=${featureName}&featureId=${featureId }'">${brand.name }</a>
 					</c:forEach>
 				</p></li>
 				</c:if>
@@ -190,19 +194,25 @@ $(document).ready(function(){
 						<a href="javascript:void(0);" title="不限" class="here">不限</a>
 						<c:forEach items="${ types}" var="type">
 							<a href="javascript:void(0);" title="${type.name }"
-							onclick="javascript:window.location.href='/product/display/list.shtml?brandId=${brandId }&brandName=${brandName }&typeId=${type.id }&typeName=${type.name }'">${type.name }</a>
+							onclick="javascript:window.location.href='/product/display/list.shtml?brandId=${brandId }&brandName=${brandName }&typeId=${type.id }&typeName=${type.name }&featureName=${featureName }&featureId=${featureId }'">${type.name }</a>
 						</c:forEach>
 						
 					</p></li>
 				</c:if>
+				<c:if test="${!empty features }">
 				<li><b>材质：</b><p>
-					<span><a href="javascript:void(0);" title="不限" class="here">不限</a></span>
-					<span><a href="javascript:void(0);" title="环保人棉">环保人棉</a></span>
-					<c:forEach items="${features }" var="f">
-						<span><a href="javascript:void(0);" title="${f.name }">${f.name }</a></span>
+					<a href="javascript:void(0);" title="不限" class="here">不限</a>	
+					<!-- <span><a href="javascript:void(0);" title="环保人棉">环保人棉</a></span> -->
+					<c:forEach items="${features }" var="feature">
+						<%-- <span><a href="javascript:void(0);" title="${f.name }">${f.name }</a></span> --%>
+						
+						<a href="/product/display/list.shtml?
+							brandId=${brandId }&brandName=${brandName }&typeId=${typeId }&typeName=${typeName }&featureName=${feature.name }&featureId=${feature.id}" title="${feature.name }"
+							onclick="javascript:">${feature.name }</a>
 					</c:forEach>
-				</p></li>
-
+				</p>
+				</li>
+				</c:if>
 				<!-- <li><b>适用人群：</b><p>
 					<a href="javascript:void(0);" title="不限" class="here">不限</a>
 					<a href="javascript:void(0);" title="男士">男士</a>

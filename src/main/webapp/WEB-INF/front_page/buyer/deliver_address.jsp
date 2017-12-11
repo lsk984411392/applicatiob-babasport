@@ -85,7 +85,7 @@ $(document).ready(function(){
 
 <div class="w loc">
 	<div class="h-title">
-		<div class="h-logo"><a href="http://localhost:8080"><img src="/res/img/pic/logo-1.png" /></a></div>
+		<div class="h-logo"><a href="/" ><img src="/res/img/pic/logo-1.png" /></a></div>
 	    <div class="h-search">
 	      	<input type="text" />
 	        <div class="h-se-btn"><a href="#">搜索</a></div>

@@ -72,6 +72,7 @@ public class FrontBuyerController {
 	public String  login(String returnUrl,String captcha,Buyer buyer,HttpServletRequest request,ModelMap model) throws IOException{
 		//验证码是否为null
 			//1:JSESSIONID
+		if(StringUtils.isNotBlank(captcha)){
 			//2验证码
 			if(imageCaptchaService.validateResponseForID(sessionProvider.getSessionId(request), captcha)){
 				if(null != buyer && StringUtils.isNotBlank(buyer.getUsername())){
@@ -103,7 +104,7 @@ public class FrontBuyerController {
 			}else{
 				model.addAttribute("error", "验证码输入错误");
 			}
-		
+		}
 		return "buyer/login";
 	}
 	@RequestMapping("/buyer/index.shtml")
@@ -156,7 +157,13 @@ public class FrontBuyerController {
 		model.addAttribute("towns", towns);
 		return "buyer/profile";
 	}
-
+	@RequestMapping(value=("/buyer/updatePro.shtml"))
+	public String updateProfile(Buyer buyer,ModelMap model,HttpServletRequest request,HttpServletResponse response){
+		buyerService.updateBuyerByKey(buyer);
+		Buyer buyer2 = buyerService.getBuyerByKey(buyer.getUsername());
+		sessionProvider.setAttribute(request, "buyer_session", buyer2);
+		return "redirect:/buyer/index.shtml";
+	}
 	@RequestMapping("/changeCity.shtml")
 	public void changeCity(String pcode,ModelMap model,HttpServletResponse response){
 		
@@ -177,13 +184,7 @@ public class FrontBuyerController {
 		j.put("towns", towns);
 		ResponseUtils.renderJson(response, j.toString());
 	}
-	@RequestMapping("/buyer/updateProfile.shtml")
-	public String updateProfile(Buyer buyer,ModelMap model,HttpServletRequest request,HttpServletResponse response){
-		buyerService.updateBuyerByKey(buyer);
-		Buyer buyer2 = buyerService.getBuyerByKey(buyer.getUsername());
-		sessionProvider.setAttribute(request, "buyer_session", buyer2);
-		return "buyer/order";
-	}
+	
 	
 	@RequestMapping("/buyer/toChangePassword.shtml")
 	public String tochangePassword(){
@@ -258,8 +259,9 @@ public class FrontBuyerController {
 	}
 	
 	@RequestMapping("/buyer/deleteOrder.shtml")
-	public String deleteOrder(Integer orderId){
+	public String deleteOrder(Integer orderId,Integer pageNo,ModelMap model){
 		orderService.deleteByKey(orderId);
+		model.addAttribute("pageNo", pageNo);
 		return "redirect:/buyer/index.shtml";
 	}
 	
@@ -268,14 +270,18 @@ public class FrontBuyerController {
 		Order order = orderService.getOrderByKey(orderId);
 		model.addAttribute("order", order);
 		
-		Buyer buyer = (Buyer) sessionProvider.getAttribute(request, "buyer_session");
+		if(order.getAddrId()!=null){
+			Addr addr = addrService.getAddrByKey(order.getAddrId());
+			model.addAttribute("addr", addr);
+		}
+		/*Buyer buyer = (Buyer) sessionProvider.getAttribute(request, "buyer_session");
 		AddrQuery addrQuery=new AddrQuery();
 		addrQuery.setBuyerId(buyer.getUsername());
 		addrQuery.setIsDef(1);
 		List<Addr> addrs = addrService.getAddrList(addrQuery);
 		if(addrs!=null&&addrs.size()>0){
 			model.addAttribute("addr", addrs.get(0));
-		}
+		}*/
 		
 		DetailQuery detailQuery=new DetailQuery();
 		detailQuery.setOrderId(order.getId());

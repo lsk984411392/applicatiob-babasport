@@ -11,7 +11,7 @@
 		<div class="rpos">当前位置: 订单管理 - 查看</div>
 		<div class="clear"></div>
 		<form class="ropt">
-		<input type="button" onclick="window.location.href='/order/list.do';" value="返回列表" class="return-button"/>
+		<input type="button" onclick="window.location.href='/order/list.do?pageNo=${pageNo}';" value="返回列表" class="return-button"/>
 	</form>
 	</div>
 	<div class="body-box">

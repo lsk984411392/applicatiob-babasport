@@ -61,7 +61,7 @@ function HoverLi(id){
      <div class="top">
           <table width="100%" border="0" cellspacing="0" cellpadding="0">
           <tr>
-            <td width="215"><div class="logo"><img src="/res/itcast/img/admin/logo.jpg" width="215" height="69" /></div></td>
+            <td width="215"><div class="logo"><img src="/res/img/pic/logo-1.png" width="215" height="69" /></div></td>
             <td valign="top">
                 <div class="topbg">
                      <div class="login-welcome">

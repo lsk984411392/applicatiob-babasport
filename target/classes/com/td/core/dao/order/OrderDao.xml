@@ -17,6 +17,7 @@
 		<result property="createDate" column="create_date" javaType="java.sql.Timestamp" jdbcType="TIMESTAMP"/>
 		<result property="note" column="note" />
 		<result property="buyerId" column="buyer_id" />
+		<result property="addrId" column="addr_id" />
 	</resultMap>
 	<!-- Select SQL -->
 	<sql id="orderSelector">
@@ -108,12 +109,12 @@
 
 	<!-- 根据主键查询 -->
 	<select id="getOrderByKey" resultMap="order" parameterType="hashMap">
-		SELECT id,oid,deliver_fee,payable_fee,total_price,payment_way,payment_cash,delivery,isConfirm,is_paiy,state,create_date,note,buyer_id FROM bbs_order
+		SELECT id,oid,deliver_fee,payable_fee,total_price,payment_way,payment_cash,delivery,isConfirm,is_paiy,state,create_date,note,buyer_id,addr_id FROM bbs_order
 		WHERE
 		id=#{id}
 	</select>
 	<select id="getOrdersByKeys" resultMap="order" parameterType="ArrayList">
-		SELECT id,oid,deliver_fee,payable_fee,total_price,payment_way,payment_cash,delivery,isConfirm,is_paiy,state,create_date,note,buyer_id FROM bbs_order
+		SELECT id,oid,deliver_fee,payable_fee,total_price,payment_way,payment_cash,delivery,isConfirm,is_paiy,state,create_date,note,buyer_id,addr_id FROM bbs_order
 		WHERE
 		id in
 		<foreach collection="list" separator="," item="id" open="(" close=")">
@@ -185,6 +186,9 @@
 				<if test="buyerId != null">
 					buyer_id = #{buyerId}
 				</if>
+				<if test="addrId != null">
+					addr_id = #{addrId}
+				</if>
 			</trim>
 		</set>
 		WHERE
@@ -251,9 +255,12 @@
 				<if test="note != null">
 					note,
 				</if>
-					<if test="buyerId != null">
-						buyer_id
-					</if>
+				<if test="buyerId != null">
+					buyer_id,
+				</if>
+				<if test="addrId != null">
+					addr_id,
+				</if>
 		</trim>
 		VALUES
 		<trim prefix="(" suffix=")" suffixOverrides=",">
@@ -297,7 +304,10 @@
 						#{note},
 					</if>
 					<if test="buyerId != null">
-						#{buyerId}
+						#{buyerId},
+					</if>
+					<if test="addrId != null">
+						#{addrId},
 					</if>
 		</trim>
 	</insert>

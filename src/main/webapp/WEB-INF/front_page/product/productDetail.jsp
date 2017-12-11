@@ -11,7 +11,7 @@
 <meta http-equiv="description" content="This is my page">
 
 
-<title>新巴巴运动网-商品详情页</title>
+<title>康康运动网-商品详情页</title>
 <link rel="stylesheet" href="/res/css/style.css" />
 <script src="/res/js/jquery.js"></script>
 <script type="text/javascript" src="/res/js/com.js"></script>
@@ -52,6 +52,10 @@ function addCart(){
 		alert(data.message);
 	},"json");
 	
+}
+function searchp(){
+	var a=$("#s1").val();
+	window.location.href="/product/display/list.shtml?searchName="+a;
 }
 function login(){
 	window.location.href = "/shopping/toLogin.shtml?returnUrl="+window.location.href;
@@ -240,10 +244,10 @@ $(document).ready(function(){
 </div></div>
 <div class="w loc">
 	<div class="h-title">
-		<div class="h-logo"><a href="http://localhost:8080"><img src="/res/img/pic/logo-1.png" /></a></div>
+		<div class="h-logo"><a href="/"><img src="/res/img/pic/logo-1.png" /></a></div>
 	    <div class="h-search">
-	      	<input type="text" />
-	        <div class="h-se-btn"><a href="#">搜索</a></div>
+	      	<input type="text" id="s1" name="searchName" value="${searchName }" />
+	        <div class="h-se-btn"><a href="javascript:void(0)" onclick="searchp()">搜索</a></div>
 	    </div>
 	</div>
 	<dl id="cart" class="cart r">

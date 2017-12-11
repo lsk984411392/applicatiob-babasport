@@ -1,6 +1,8 @@
 package com.td.core.controller;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -67,7 +69,7 @@ public class FrontOrderController {
 		if(cookies!=null&&cookies.length>0){
 			for (Cookie cookie : cookies) {
 				if(cookie.getName().equals("buyCart_cookie")){
-					String s1 = cookie.getValue();
+					String s1 = URLDecoder.decode(cookie.getValue(),"UTF-8") ;
 					buyCart = om.readValue(s1, BuyCart.class);
 					break;
 				}
@@ -83,7 +85,7 @@ public class FrontOrderController {
 				}
 				StringWriter str=new StringWriter();
 				om.writeValue(str, buyCart);
-				Cookie c=new Cookie("buyCart_cookie", str.toString());
+				Cookie c=new Cookie("buyCart_cookie", URLEncoder.encode(str.toString(), "UTF-8"));
 				c.setMaxAge(60*60);//一小时
 				c.setPath("/");//设置路径，默认为url
 				response.addCookie(c);
@@ -119,7 +121,7 @@ public class FrontOrderController {
 		}
 	}
 	@RequestMapping("/buyer/submitOrder.shtml")
-	public String submitOrder(Order order,ModelMap model,HttpServletRequest request,HttpServletResponse response) throws Exception{
+	public String submitOrder(Order order,Integer addrId, ModelMap model,HttpServletRequest request,HttpServletResponse response) throws Exception{
 		BuyCart buyCart=null;
 		ObjectMapper om=new ObjectMapper();
 		om.setSerializationInclusion(Inclusion.NON_NULL);
@@ -127,7 +129,7 @@ public class FrontOrderController {
 		if(cookies!=null&&cookies.length>0){
 			for (Cookie cookie : cookies) {
 				if(cookie.getName().equals("buyCart_cookie")){
-					String s1 = cookie.getValue();
+					String s1 = URLDecoder.decode(cookie.getValue(),"UTF-8") ;
 					buyCart = om.readValue(s1, BuyCart.class);
 					break;
 				}
@@ -146,6 +148,9 @@ public class FrontOrderController {
 		order.setDeliverFee(buyCart.getFee());
 		order.setPayableFee(buyCart.getTotalPrice());
 		order.setTotalPrice(buyCart.getTotalPrice());
+		if(addrId!=null){
+			order.setAddrId(addrId);
+		}
 		if(order.getPaymentWay()==0){
 			order.setIsPaiy(0);
 		}else{

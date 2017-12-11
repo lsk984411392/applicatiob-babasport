@@ -47,7 +47,7 @@ function login(){
 	</ul>
 </div></div>
 
-<div class="h-logo" id="d1"><a href="http://localhost:8080">&nbsp;&nbsp;&nbsp;&nbsp;<img src="/res/img/pic/logo-1.png" /></a></div>
+<div class="h-logo" id="d1"><a href="/" >&nbsp;&nbsp;&nbsp;&nbsp;<img src="/res/img/pic/logo-1.png" /></a></div>
 <center><h1>查看订单详情</h1></center>
 
 <div class="w ofc case">

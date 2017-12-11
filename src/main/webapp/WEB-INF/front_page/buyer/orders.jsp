@@ -2,7 +2,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 <head>
-<title>新巴巴运动网_用户中心</title>
+<title>康康运动网_用户中心</title>
 <link rel="stylesheet" href="/res/css/style.css" />
 <script src="/res/js/jquery.js"></script>
 <script src="/res/js/com.js"></script>
@@ -23,7 +23,7 @@
 </div></div>
 <div class="w loc">
 	<div class="h-title">
-		<div class="h-logo"><a href="http://localhost:8080"><img src="/res/img/pic/logo-1.png" /></a></div>
+		<div class="h-logo"><a href="/" ><img src="/res/img/pic/logo-1.png" /></a></div>
 	    <div class="h-search">
 	      	<input type="text" />
 	        <div class="h-se-btn"><a href="#">搜索</a></div>

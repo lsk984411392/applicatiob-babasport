@@ -76,7 +76,7 @@ $(document).ready(function(){
 </div></div>
 <div class="w loc">
 	<div class="h-title">
-		<div class="h-logo"><a href="http://localhost:8080"><img src="/res/img/pic/logo-1.png" /></a></div>
+		<div class="h-logo"><a href="/" ><img src="/res/img/pic/logo-1.png" /></a></div>
 	    <div class="h-search">
 	      	<input type="text" />
 	        <div class="h-se-btn"><a href="#">搜索</a></div>
@@ -142,15 +142,15 @@ $(document).ready(function(){
 					</li>
 					<li>
 						<label for="realPassword">新 密 码：</label>
-						<span class="bg_text"><input type="text" id="realPassword" name="realPassword" maxLength="32" vld="{required:true}" /></span>
+						<span class="bg_text"><input type="password" id="realPassword" name="realPassword" maxLength="32" vld="{required:true}" /></span>
 						<!-- <span class="pos"><span class="tip okTip" >&nbsp;请输入新密码</span></span> -->
 					</li>
 					<li>
 						<label for="confirmPassword">确认新密码：</label>
-						<span class="bg_text"><input type="text" id="confirmPassword" name="confirmPassword" maxLength="32" vld="{required:true}" /></span>
+						<span class="bg_text"><input type="password" id="confirmPassword" name="confirmPassword" maxLength="32" vld="{required:true}" /></span>
 						<!-- <span class="pos"><span class="tip warningTip" >请确认新密码。</span></span> -->
 					</li>
-					<li><label for="">&nbsp;</label><input type="submit" value="确认" class="hand btn66x23" /></li>
+					<li><label for="">&nbsp;</label><input type="button" value="确认" class="hand btn66x23" onclick="xiugaimima()"/></li>
 					</ul>
 				</form>
 
@@ -161,7 +161,28 @@ $(document).ready(function(){
 	</div>
 </div>
 <script type="text/javascript">
-	
+	function xiugaimima(){
+		var v1=$("#password").val();
+		var v2=$("#realPassword").val();
+		var v3=$("#confirmPassword").val();
+		if(v1==""){
+			alert("请输入旧密码");
+			return;
+		}
+		if(v2==""){
+			alert("请输入新密码");
+			return;
+		}
+		if(v3==""){
+			alert("请确认密码");
+			return;
+		}
+		if(v2!=v3){
+			alert("两次输入的密码不一致");
+			return ;
+		}
+		$("#jvForm").submit();
+	}
 
 </script>
 

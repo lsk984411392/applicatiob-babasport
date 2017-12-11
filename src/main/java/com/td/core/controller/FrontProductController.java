@@ -6,6 +6,7 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -62,19 +63,31 @@ public class FrontProductController {
 	@Autowired
 	private BuyerService buyerService;
 	@RequestMapping("/product/display/list.shtml")
-	public String list(Integer pageNo,ModelMap model,Integer brandId,String brandName,Integer typeId,String typeName){
-		//材质
-		FeatureQuery featureQuery=new FeatureQuery();
-		featureQuery.setFields("id,name");
-		List<Feature> features = featureService.getFeatureList(featureQuery);
-		model.addAttribute("features", features);
-		
+	public String list(Integer pageNo,ModelMap model,Integer brandId,String brandName,Integer typeId,String typeName,String featureName,Integer featureId,String searchName){
 		StringBuffer params=new StringBuffer();
 		ProductQuery productQuery=new ProductQuery();
 		productQuery.orderbyId(false);//按照id倒序查询
 		productQuery.setIsShow(1);//设置 商品 上架
 		LinkedHashMap<String, String> map=new LinkedHashMap<String, String>();
 		boolean flag=false;
+		if(StringUtils.isNotBlank(searchName)){
+			productQuery.setNameLike(true);
+			productQuery.setName(searchName);
+			model.addAttribute("searchName", searchName);
+		}
+		if(StringUtils.isNotBlank(featureName)){
+			flag=true;
+			productQuery.setFeature(featureId.toString());
+			model.addAttribute("featureName", featureName);
+			model.addAttribute("featureId", featureId);
+			map.put("材质", featureName);
+			params.append("&featureName=").append(featureName).append("&featureId=").append(featureId);
+		}else{
+			FeatureQuery featureQuery=new FeatureQuery();
+			featureQuery.setFields("id,name");
+			List<Feature> features = featureService.getFeatureList(featureQuery);
+			model.addAttribute("features", features);
+		}
 		if(brandId!=null){
 			flag=true;
 			productQuery.setBrandId(brandId);

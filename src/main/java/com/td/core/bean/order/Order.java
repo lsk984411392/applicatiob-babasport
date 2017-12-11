@@ -32,6 +32,9 @@ public class Order implements Serializable {
 	private Date createDate;
 	private String note;
 	private String buyerId;
+	private Integer addrId;
+	
+	
 	
 	private BuyCart buyCart;
 	
@@ -197,6 +200,13 @@ public class Order implements Serializable {
 	}
 	public void setBuyerId(String buyerId) {
 		this.buyerId = buyerId;
+	}
+	
+	public Integer getAddrId() {
+		return addrId;
+	}
+	public void setAddrId(Integer addrId) {
+		this.addrId = addrId;
 	}
 	@Override
 	public String toString() {

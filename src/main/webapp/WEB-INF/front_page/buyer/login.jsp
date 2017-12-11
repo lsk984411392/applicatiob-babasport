@@ -5,7 +5,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
 <head>
-<title>登录_新巴巴运动网</title>
+<title>登录_康康运动网</title>
 <link rel="stylesheet" href="/res/css/style.css" />
 <script src="/res/js/jquery.js"></script>
 <script src="/res/js/com.js"></script>
@@ -25,7 +25,7 @@
 </div></div>
 <div class="w loc">
 	<div class="h-title" id="logo">
-		<div class="h-logo l"><a href="http://localhost:8080"><img src="/res/img/pic/logo-1.png" /></a></div>
+		<div class="h-logo l"><a href="/" ><img src="/res/img/pic/logo-1.png" /></a></div>
 		<div class="l" style="margin: 13px 10px;font-size: 20px;font-family: '微软雅黑';letter-spacing: 2px">欢迎登录</div>
 	</div>
 </div>

@@ -1,14 +1,13 @@
 package com.td.core.controller;
-import java.io.IOException;
 import java.io.StringWriter;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.util.List;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.codehaus.jackson.JsonParseException;
-import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.codehaus.jackson.map.annotate.JsonSerialize.Inclusion;
 import org.json.JSONObject;
@@ -39,7 +38,7 @@ public class FrontCartController {
 		if(cookies!=null&&cookies.length>0){
 			for (Cookie cookie : cookies) {
 				if(cookie.getName().equals("buyCart_cookie")){
-					String s1 = cookie.getValue();
+					String s1 = URLDecoder.decode(cookie.getValue(),"UTF-8") ;
 					buyCart = om.readValue(s1, BuyCart.class);
 					break;
 				}
@@ -59,7 +58,7 @@ public class FrontCartController {
 			buyCart.setProductId(productId);
 			StringWriter str=new StringWriter();
 			om.writeValue(str, buyCart);
-			Cookie c=new Cookie("buyCart_cookie", str.toString());
+			Cookie c=new Cookie("buyCart_cookie", URLEncoder.encode(str.toString(), "UTF-8"));
 			c.setMaxAge(60*60);//一小时
 			c.setPath("/");//设置路径，默认为url
 			response.addCookie(c);
@@ -83,7 +82,7 @@ public class FrontCartController {
 		if(cookies!=null&&cookies.length>0){
 			for (Cookie cookie : cookies) {
 				if(cookie.getName().equals("buyCart_cookie")){
-					String s1 = cookie.getValue();
+					String s1 = URLDecoder.decode(cookie.getValue(),"UTF-8") ;
 					buyCart = om.readValue(s1, BuyCart.class);
 					break;
 				}
@@ -103,7 +102,7 @@ public class FrontCartController {
 			buyCart.setProductId(productId);
 			StringWriter str=new StringWriter();
 			om.writeValue(str, buyCart);
-			Cookie c=new Cookie("buyCart_cookie", str.toString());
+			Cookie c=new Cookie("buyCart_cookie", URLEncoder.encode(str.toString(), "UTF-8"));
 			c.setMaxAge(60*60);//一小时
 			c.setPath("/");//设置路径，默认为url
 			response.addCookie(c);
@@ -121,7 +120,7 @@ public class FrontCartController {
 		if(cookies!=null&&cookies.length>0){
 			for (Cookie cookie : cookies) {
 				if(cookie.getName().equals("buyCart_cookie")){
-					String s1 = cookie.getValue();
+					String s1 = URLDecoder.decode(cookie.getValue(),"UTF-8") ;
 					buyCart = om.readValue(s1, BuyCart.class);
 					break;
 				}
@@ -135,7 +134,7 @@ public class FrontCartController {
 		
 		StringWriter str=new StringWriter();
 		om.writeValue(str, buyCart);
-		Cookie c=new Cookie("buyCart_cookie", str.toString());
+		Cookie c=new Cookie("buyCart_cookie", URLEncoder.encode(str.toString(), "UTF-8"));
 		c.setMaxAge(60*60);//一小时
 		c.setPath("/");//设置路径，默认为url
 		response.addCookie(c);
@@ -164,7 +163,7 @@ public class FrontCartController {
 		if(cookies!=null&&cookies.length>0){
 			for (Cookie cookie : cookies) {
 				if(cookie.getName().equals("buyCart_cookie")){
-					String s1 = cookie.getValue();
+					String s1 = URLDecoder.decode(cookie.getValue(),"UTF-8") ;
 					buyCart = om.readValue(s1, BuyCart.class);
 					break;
 				}

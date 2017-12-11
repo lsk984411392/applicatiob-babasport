@@ -61,7 +61,7 @@ public class OrderController {
 		return "order/list";
 	}
 	@RequestMapping("/order/view.do")
-	public String view(Integer  orderId,ModelMap model){
+	public String view(Integer  orderId,ModelMap model,Integer pageNo){
 		Order order = orderService.getOrderByKey(orderId);
 		model.addAttribute("order", order);
 		AddrQuery addrQuery=new AddrQuery();
@@ -79,8 +79,7 @@ public class OrderController {
 		if(details!=null&&details.size()>0){
 			model.addAttribute("details", details);
 		}
-		
-		
+		model.addAttribute("pageNo", pageNo);
 		return "order/view";
 	}
 	

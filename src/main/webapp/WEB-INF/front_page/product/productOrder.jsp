@@ -56,7 +56,7 @@ function login(){
 	</ul>
 </div></div>
 
-<div class="h-logo" id="d1"><a href="http://localhost:8080">&nbsp;&nbsp;&nbsp;&nbsp;<img src="/res/img/pic/logo-1.png" /></a></div>
+<div class="h-logo" id="d1"><a href="/" >&nbsp;&nbsp;&nbsp;&nbsp;<img src="/res/img/pic/logo-1.png" /></a></div>
 <ul class="ul step st3_2">
 <li title="1.我的购物车">1.我的购物车</li>
 <li title="2.填写核对订单信息" class="here">2.填写核对订单信息</li>
@@ -65,13 +65,13 @@ function login(){
 <form action="/buyer/submitOrder.shtml" method="post">
 
 <div class="w ofc case">
-	<h2 class="h2 h2_r mt"><em title="收货人信息">收货人信息      [<a href="#"><font style="color:blue;">修改</font></a>]</em><cite></cite></h2>
+	<h2 class="h2 h2_r mt"><em title="收货人信息">收货人信息      <!-- [<a href="#"><font style="color:blue;">修改</font></a>] --></em><cite></cite></h2>
 	<div class="box bg_white">
 		<dl class="distr">
 			<dd>${addr.name }   ${addr.phone } <span style="margin-left: 30px">${addr.city } ${addr.addr }</span></dd>
 		</dl>
 	</div>
-	
+	<input type="hidden" name="addrId" value="${addr.id }">
 	<div class="box bg_white pb">
 		<dl class="distr">
 			<dt><input type="radio" name="paymentWay" value="0" />货到付款<span class="gray" style="margin-left: 140px">送货上门后再收款，支持现金、POS机刷卡、支票支付</span></dt>

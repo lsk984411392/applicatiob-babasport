@@ -12,6 +12,25 @@
 	<listener>
 		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
 	</listener>
+	
+	  <filter>
+		<filter-name>cache</filter-name>
+		<filter-class>com.opensymphony.oscache.web.filter.CacheFilter</filter-class>
+		<init-param>
+			<param-name>time</param-name>
+			<param-value>600</param-value><!-- 配置缓存刷新时间   十分钟 -->
+		</init-param>
+		<init-param>
+			<param-name>scope</param-name>
+			<param-value>application</param-value>
+		</init-param>
+	</filter>
+	<filter-mapping>
+		<filter-name>cache</filter-name>
+		<url-pattern>/product/display/*</url-pattern>
+	</filter-mapping> 
+
+	
 	<filter>
 		<filter-name>encoding</filter-name>
 		<filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>

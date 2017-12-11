@@ -55,7 +55,7 @@
 				<td align="center">${fn:substring(order.createDate,0,19) }</td>
 				<td align="center"></td>
 				<td align="center">
-				<a href="/order/view.do?orderId=${order.id }" class="pn-opt">查看</a>
+				<a href="/order/view.do?orderId=${order.id }&pageNo=${pagination.pageNo}" class="pn-opt">查看</a>
 				</td>
 			</tr>
 		</c:forEach>

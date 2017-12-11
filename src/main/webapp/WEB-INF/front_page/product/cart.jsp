@@ -28,7 +28,7 @@ $(document).ready(function(){
 
 });
 function addProductAmount(skuId,buyLimit,productId){
-	var a=$("#num492").val();
+	var a=$("#"+skuId).val();
 	if(a>=buyLimit){
 		alert("此商品嘴最多购买"+buyLimit+"件哦哦！！！");
 		return ;
@@ -38,8 +38,9 @@ function addProductAmount(skuId,buyLimit,productId){
 	
 }
 function subProductAmount(skuId,buyLimit,productId){
-	var a=$("#num492").val();
+	var a=$("#"+skuId).val();
 	if(a==1){
+		alert("已经是一件了，再不喜欢就删除吧！！！");
 		return ;
 	}
 	var amount =-1;
@@ -76,7 +77,7 @@ function subProductAmount(skuId,buyLimit,productId){
 	</ul>
 </div></div>
 <div>
-	<div class="h-logo" id="d1"><a href="http://localhost:8080">&nbsp;&nbsp;&nbsp;&nbsp;<img src="/res/img/pic/logo-1.png" /></a></div>
+	<div class="h-logo" id="d1"><a href="/" >&nbsp;&nbsp;&nbsp;&nbsp;<img src="/res/img/pic/logo-1.png" /></a></div>
 	<ul class="ul step st3_1">
 	
 	<li title="1.我的购物车" class="here">1.我的购物车</li>
@@ -123,7 +124,7 @@ function subProductAmount(skuId,buyLimit,productId){
 					
 					
 						<a onclick="subProductAmount(${item.sku.id},${item.sku.skuUpperLimit },${productId })" class="inb arr" title="减" href="javascript:void(0);">-</a>
-						<input type="text" id="num492" readonly="readonly" value="${item.amount }" name="" size="1" class="txts">
+						<input type="text" id="${item.sku.id }" readonly="readonly" value="${item.amount }" name="" size="1" class="txts">
 						<a onclick="addProductAmount(${item.sku.id},${item.sku.skuUpperLimit },${productId })" class="inb arr" title="加" href="javascript:void(0);">+</a>
 					
 					</td>

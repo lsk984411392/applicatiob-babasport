@@ -46,7 +46,7 @@ function login(){
 	</ul>
 </div></div>
 
-<div class="h-logo" id="d1"><a href="http://localhost:8080">&nbsp;&nbsp;&nbsp;&nbsp;<img src="/res/img/pic/logo-1.png" /></a></div>
+<div class="h-logo" id="d1"><a href="/" >&nbsp;&nbsp;&nbsp;&nbsp;<img src="/res/img/pic/logo-1.png" /></a></div>
 <ul class="ul step st3_3">
 <li title="1.我的购物车">1.我的购物车</li>
 <li title="2.填写核对订单信息">2.填写核对订单信息</li>
